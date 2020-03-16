@@ -52,6 +52,8 @@ function generateChoiceLetters(){
         choiceLetter.innerText = alphabet[i].toUpperCase();
         choiceLetter.style.width = '8vh';
         choiceLetter.style.height = '8vh';
+        // show right alphabets when the button is clicked
+        choiceLetter.onclick = choiceLetterClick;
         choiceLetterContainer.appendChild(choiceLetter);
     }
 }
@@ -68,10 +70,14 @@ function getGuessWord() {
 // generates the guess word letters
 function generateGuessLetters(){
     for (let i = 0; i < guessWord.length; i++) {
-        let guessLetterId = 'g-letter-' + guessWord[i];
+        // letters can repeat in a word, so instead of using id, use class name
+        // let guessLetterId = 'g-letter-' + guessWord['word'][i];
+
+        // use the class to show letters when a button is clicked.
+        let guessLetterClass = guessWord[i];
         let guessLetter = document.createElement('button');
-        guessLetter.classList.add('guessLetterBtn');
-        guessLetter.id = guessLetterId;
+        guessLetter.classList.add(guessLetterClass);
+        // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetter.style.width = '8vh';
         guessLetter.style.height = '8vh';
@@ -93,6 +99,16 @@ function generateGuessDefinition() {
 // function for when choice letters are clicked
 function choiceLetterClick() {
     let choiceLetterClicked = document.getElementById(this.id);
+
+    let letterToShow = choiceLetterClicked.innerText.toLowerCase();
+    let elementsArray = document.getElementsByClassName(letterToShow);
+    // loop over the elements and change the innerText
+    for (let i = 0; i < elementsArray.length; i++) {
+        elementsArray[i].innerText = letterToShow;
+    }
+
+    // make the button clickable only once
+    choiceLetterClicked.disabled = true;
 }
 
 function looseLife() {
