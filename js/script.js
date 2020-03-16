@@ -1,23 +1,44 @@
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
 const guessLetterContainer = document.getElementById("guessLetterContainer");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
-let dictionary = [];
+let wordList = [];
 let guessWord;
+let guessWordDefinition;
 
-// fetch data from the dictionary database .json file
-fetch("src/dictionary.json")
-    .then(response => {
-        return response.json();
-    })
+
+// Oh?! What's this!? Blake got a god damn API Booya!
+// curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
+// fetch definition of word from OwlBot API apply to guessWordDefinition variable
+function getOwlAPIWord(word) {
+    let url = "https://owlbot.info/api/v4/dictionary/" + word;
+    let options = {
+        headers: {
+            Authorization: "Token d58d5b9e279673445fd27ae980b3a29950a230c9"
+        }
+    };
+    fetch(url, options)
+        .then(res => res.json())
+        .then(data => {
+            guessWordDefinition = data["definitions"][0]["definition"];
+            console.log(data);
+            console.log(data["definitions"][0]["definition"]);
+            generateGuessDefinition();
+        });
+}
+
+// fetch data from wordlist.json file apply to wordList variable
+fetch("src/wordlist.json")
+    .then(res => res.json())
     .then(data => {
-        dictionary = data;
+        wordList = data;
         console.log(data);
         main();
     });
+
 // main call on load
 function main(){
     generateChoiceLetters();
-    generateGuessWord();
+    getGuessWord();
 }
 
 // generates choice letters
@@ -35,26 +56,38 @@ function generateChoiceLetters(){
     }
 }
 
-// get random guess word from .json
-function generateGuessWord() {
-    let randomNumber = Math.floor(Math.random() * dictionary.length);
-    guessWord = dictionary[randomNumber];
+// get random guess word from wordList
+function getGuessWord() {
+    let randomNumber = Math.floor(Math.random() * wordList.length);
+    guessWord = wordList[randomNumber];
     generateGuessLetters();
-    console.log(guessWord)
+    console.log(guessWord);
+    getOwlAPIWord(guessWord);
 }
 
 // generates the guess word letters
 function generateGuessLetters(){
-    for (let i = 0; i < guessWord['word'].length; i++) {
-        let guessLetterId = 'g-letter-' + guessWord['word'][i];
+    for (let i = 0; i < guessWord.length; i++) {
+        let guessLetterId = 'g-letter-' + guessWord[i];
         let guessLetter = document.createElement('button');
-        guessLetter.classList.add('choiceLetterBtn');
+        guessLetter.classList.add('guessLetterBtn');
         guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetter.style.width = '8vh';
         guessLetter.style.height = '8vh';
         guessLetterContainer.appendChild(guessLetter);
     }
+}
+
+// generates the guess word definition from OWL API
+function generateGuessDefinition() {
+    let guessDefinitionId = "guessDefinitionId";
+    let guessDefinition = document.createElement('p');
+    guessDefinition.id = guessDefinitionId;
+    guessDefinition.innerText = guessWordDefinition;
+    guessDefinition.style.width = '40vh';
+    guessDefinition.style.height = '20vh';
+    guessLetterContainer.appendChild(guessDefinition);
 }
 
 // function for when choice letters are clicked
