@@ -3,5 +3,13 @@
     display: table-cell;
     transform: translate(-50%, -50%);
     margin-left: 50%;
-    margin-top: 30%;
+    margin-top: 40%;
+}
+
+#guessLetterContainer {
+    position: absolute;
+    display: table-cell;
+    transform: translate(-50%, -50%);
+    margin-left: 50%;
+    margin-top: 20%;
 }

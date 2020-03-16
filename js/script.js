@@ -1,8 +1,111 @@
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
+const guessLetterContainer = document.getElementById("guessLetterContainer");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+let dictionary = [];
+let guessWord;
 
+// fetch data from the dictionary database .json file
+fetch("src/dictionary.json")
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        dictionary = data;
+        console.log(data);
+        main();
+    });
+// main call on load
 function main(){
-    generateChoiceLetters()
+    generateChoiceLetters();
+    generateGuessWord();
+}
+
+// generates choice letters
+function generateChoiceLetters(){
+    for (let i = 0; i < alphabet.length; i++) {
+        let choiceLetterId = 'c-letter-' + alphabet[i];
+        let choiceLetter = document.createElement('button');
+        choiceLetter.classList.add('choiceLetterBtn');
+        choiceLetter.id = choiceLetterId;
+        choiceLetter.onclick = choiceLetterClick;
+        choiceLetter.innerText = alphabet[i].toUpperCase();
+        choiceLetter.style.width = '8vh';
+        choiceLetter.style.height = '8vh';
+        choiceLetterContainer.appendChild(choiceLetter);
+    }
+}
+
+// get random guess word from .json
+function generateGuessWord() {
+    let randomNumber = Math.floor(Math.random() * dictionary.length);
+    guessWord = dictionary[randomNumber];
+    generateGuessLetters();
+    console.log(guessWord)
+}
+
+// generates the guess word letters
+function generateGuessLetters(){
+    for (let i = 0; i < guessWord['word'].length; i++) {
+        let guessLetterId = 'g-letter-' + guessWord['word'][i];
+        let guessLetter = document.createElement('button');
+        guessLetter.classList.add('choiceLetterBtn');
+        guessLetter.id = guessLetterId;
+        guessLetter.innerText = "_";
+        guessLetter.style.width = '8vh';
+        guessLetter.style.height = '8vh';
+        guessLetterContainer.appendChild(guessLetter);
+    }
+}
+
+// function for when choice letters are clicked
+function choiceLetterClick() {
+    let choiceLetterClicked = document.getElementById(this.id);
+}
+
+function looseLife() {
+
+}
+
+function scoreIncrement(){
+
+}
+
+function scoreReset() {
+
+}
+
+function scoreUpdate() {
+
+}
+
+function gameOver() {
+
+}
+
+function gameStop() {
+
+}
+
+function gameStart(){
+
+}
+
+function musicToggle() {
+    if (musicPlaying === false) {
+        musicPlaying = true;
+        playAudio(audioMusic)
+    } else {
+        musicPlaying = false;
+        pauseAudio(audioMusic)
+    }
+}
+
+function playAudio(audioID) {
+    audioID.play();
+}
+
+function pauseAudio(audioID) {
+    audioID.pause();
 }
 
 function startStop(){
@@ -83,70 +186,3 @@ function difficulty_setting() {
         }, 200);
     }
 }
-
-function generateChoiceLetters(){
-    for (let i = 0; i < alphabet.length; i++) {
-        let choiceLetterId = 'c-letter-' + alphabet[i];
-        let choiceLetter = document.createElement('button');
-        choiceLetter.classList.add('choiceLetterBtn');
-        choiceLetter.id = choiceLetterId;
-        choiceLetter.onclick = choiceLetterClick;
-        choiceLetter.innerText = alphabet[i].toUpperCase();
-        choiceLetter.style.width = '10vh';
-        choiceLetter.style.height = '10vh';
-        choiceLetterContainer.appendChild(choiceLetter);
-    }
-}
-
-function looseLife() {
-
-}
-
-function choiceLetterClick() {
-    let choiceLetterClicked = document.getElementById(this.id);
-}
-
-function musicToggle() {
-    if (musicPlaying === false) {
-        musicPlaying = true;
-        playAudio(audioMusic)
-    } else {
-        musicPlaying = false;
-        pauseAudio(audioMusic)
-    }
-}
-
-function playAudio(audioID) {
-    audioID.play();
-}
-
-function pauseAudio(audioID) {
-    audioID.pause();
-}
-
-
-function scoreIncrement(){
-
-}
-
-function scoreReset() {
-
-}
-
-function scoreUpdate() {
-
-}
-
-function gameOver() {
-
-}
-
-function gameStop() {
-
-}
-
-function gameStart(){
-
-}
-
-main();
