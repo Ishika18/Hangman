@@ -4,6 +4,8 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz";
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
+let score = 0;
+let lives = 7;
 
 
 // Oh?! What's this!? Blake got a god damn API Booya!
@@ -102,21 +104,43 @@ function choiceLetterClick() {
 
     let letterToShow = choiceLetterClicked.innerText.toLowerCase();
     let elementsArray = document.getElementsByClassName(letterToShow);
+
+    // if no letter is present decrease the sccore
+    if (elementsArray.length == 0) {
+        scoreDecrement();
+        looseLife();
+    }
     // loop over the elements and change the innerText
     for (let i = 0; i < elementsArray.length; i++) {
         elementsArray[i].innerText = letterToShow;
+
+        // increase the score
+        score += 1;
     }
+
+    scoreUpdate();
 
     // make the button clickable only once
     choiceLetterClicked.disabled = true;
 }
 
 function looseLife() {
+    if (lives == 1) {
+        gameOver();
+    } else {
+        lives -= 1;
+        console.log(lives);
 
+        // some animation of loose life.
+    }
 }
 
-function scoreIncrement(){
+function scoreDecrement(){
+    score -= 1;
+}
 
+function scoreIncrement() {
+    score += 1;
 }
 
 function scoreReset() {
@@ -124,11 +148,11 @@ function scoreReset() {
 }
 
 function scoreUpdate() {
-
+    document.getElementById('score').innerHTML = "Score: " + score;
 }
 
 function gameOver() {
-
+    console.log("You loose");
 }
 
 function gameStop() {
@@ -151,6 +175,8 @@ function musicToggle() {
 
 function playAudio(audioID) {
     audioID.play();
+    // loop the audio
+    audioID.loop = true;
 }
 
 function pauseAudio(audioID) {
