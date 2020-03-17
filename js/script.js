@@ -1,5 +1,6 @@
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
 const guessLetterContainer = document.getElementById("guessLetterContainer");
+const optionsContainer = document.getElementById("optionsContainer");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 let wordList = [];
 let guessWord;
@@ -8,7 +9,7 @@ let score = 0;
 let lives = 7;
 
 
-// Oh?! What's this!? Blake got a god damn API Booya!
+// Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
 // fetch definition of word from OwlBot API apply to guessWordDefinition variable
 function getOwlAPIWord(word) {
@@ -37,10 +38,9 @@ fetch("src/wordlist.json")
         main();
     });
 
-// main call on load
+// main call
 function main(){
-    generateChoiceLetters();
-    getGuessWord();
+    gameStart()
 }
 
 // generates choice letters
@@ -105,27 +105,61 @@ function choiceLetterClick() {
     let letterToShow = choiceLetterClicked.innerText.toLowerCase();
     let elementsArray = document.getElementsByClassName(letterToShow);
 
-    // if no letter is present decrease the sccore
-    if (elementsArray.length == 0) {
+    // if no letter is present decrease the score
+    if (elementsArray.length === 0) {
         scoreDecrement();
         looseLife();
+        choiceLetterClickFail(choiceLetterClicked)
     }
+
     // loop over the elements and change the innerText
     for (let i = 0; i < elementsArray.length; i++) {
         elementsArray[i].innerText = letterToShow;
 
         // increase the score
-        score += 1;
+        scoreIncrement();
+        choiceLetterClickSuccess(choiceLetterClicked)
     }
 
+    // update score
     scoreUpdate();
 
     // make the button clickable only once
     choiceLetterClicked.disabled = true;
 }
 
+// changes colour of the choice letters when clicked, this one fails, so red
+function choiceLetterClickFail(letter) {
+    letter.style.color = 'black';
+    letter.style.fontSize = '28px';
+    setTimeout(function () {
+        letter.style.fontSize = '20px';
+        letter.style.color = "white";
+        letter.style.backgroundColor = "red"
+    }, 100);
+}
+
+// changes colour of the choice letters when clicked, this one succeeds, so green
+function choiceLetterClickSuccess(letter) {
+    letter.style.color = 'black';
+    letter.style.fontSize = '28px';
+    setTimeout(function () {
+        letter.style.fontSize = '20px';
+        letter.style.backgroundColor = "lawngreen"
+    }, 200);
+}
+
+function generateResetButton() {
+    let reset = document.createElement("button");
+    reset.onclick = gameRestart;
+    reset.style.width = '12vh';
+    reset.style.height = '12vh';
+    reset.innerText = "Reset";
+    optionsContainer.appendChild(reset)
+}
+
 function looseLife() {
-    if (lives == 1) {
+    if (lives === 1) {
         gameOver();
     } else {
         lives -= 1;
@@ -144,7 +178,7 @@ function scoreIncrement() {
 }
 
 function scoreReset() {
-
+    score = 0;
 }
 
 function scoreUpdate() {
@@ -152,15 +186,33 @@ function scoreUpdate() {
 }
 
 function gameOver() {
-    console.log("You loose");
+    alert("You loose.");
+    console.log("You loose.");
 }
 
 function gameStop() {
 
 }
 
+// start the game
 function gameStart(){
+    generateResetButton();
+    generateChoiceLetters();
+    getGuessWord();
+}
 
+function gameRestart() {
+    while (choiceLetterContainer.firstChild) {
+        choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
+    }
+    while (guessLetterContainer.firstChild) {
+        guessLetterContainer.removeChild(guessLetterContainer.lastChild);
+    }
+    while (optionsContainer.firstChild) {
+        optionsContainer.removeChild(optionsContainer.lastChild);
+    }
+    scoreReset();
+    gameStart();
 }
 
 function musicToggle() {
