@@ -8,7 +8,6 @@ let guessWordDefinition;
 let score = 0;
 let lives = 7;
 
-
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
 // fetch definition of word from OwlBot API apply to guessWordDefinition variable
@@ -79,6 +78,7 @@ function generateGuessLetters(){
         let guessLetterClass = guessWord[i];
         let guessLetter = document.createElement('button');
         guessLetter.classList.add(guessLetterClass);
+        guessLetter.classList.add("guessLetter");
         // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetter.style.width = '8vh';
@@ -101,34 +101,58 @@ function generateGuessDefinition() {
 // function for when choice letters are clicked
 function choiceLetterClick() {
     let choiceLetterClicked = document.getElementById(this.id);
-
     let letterToShow = choiceLetterClicked.innerText.toLowerCase();
     let elementsArray = document.getElementsByClassName(letterToShow);
 
     // if no letter is present decrease the score
     if (elementsArray.length === 0) {
+        choiceLetterClickFail(choiceLetterClicked);
         scoreDecrement();
-        looseLife();
-        choiceLetterClickFail(choiceLetterClicked)
+        lifeDecrement();
+    } else {
+        // loop over the elements and change the innerText for letters present, increment score
+        for (let i = 0; i < elementsArray.length; i++) {
+            elementsArray[i].innerText = letterToShow;
+            scoreIncrement();
+        }
+        choiceLetterClickSuccess(choiceLetterClicked);
     }
-
-    // loop over the elements and change the innerText
-    for (let i = 0; i < elementsArray.length; i++) {
-        elementsArray[i].innerText = letterToShow;
-
-        // increase the score
-        scoreIncrement();
-        choiceLetterClickSuccess(choiceLetterClicked)
-    }
-
-    // update score
-    scoreUpdate();
-
-    // make the button clickable only once
+    // disable button, make the button clickable only once
     choiceLetterClicked.disabled = true;
+
+    // check if the guessWord has been completely guessed.
+    checkIfWordIsGuessed();
 }
 
-// changes colour of the choice letters when clicked, this one fails, so red
+// check if the player has guessed the word yet
+function checkIfWordIsGuessed() {
+    let allGuessLetters = document.getElementsByClassName("guessLetter");
+    console.log(allGuessLetters);
+    for (let i = 0; i < allGuessLetters.length; i++) {
+        if (allGuessLetters[i].innerHTML === "_") {
+            // if word has not yet been guessed
+            console.log("Word has not yet been guessed.");
+            return
+        }
+    }
+    // if word has been guessed correctly
+    console.log("Word has been guessed!");
+    wordIsGuessedFlair();
+    setTimeout(gameNewRound, 2000)
+}
+
+// flair for when player guesses the word correctly
+function wordIsGuessedFlair() {
+    let allGuessLetters = document.getElementsByClassName("guessLetter");
+    for (let i = 0; i < allGuessLetters.length; i++) {
+        allGuessLetters[i].style.background = "lawngreen";
+        allGuessLetters[i].style.fontWeight = "bolder";
+        allGuessLetters[i].style.fontSize = "5vh"
+    }
+}
+
+
+// changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
     letter.style.color = 'black';
     letter.style.fontSize = '28px';
@@ -139,7 +163,7 @@ function choiceLetterClickFail(letter) {
     }, 100);
 }
 
-// changes colour of the choice letters when clicked, this one succeeds, so green
+// changes colour of the choice letters when clicked, on success green
 function choiceLetterClickSuccess(letter) {
     letter.style.color = 'black';
     letter.style.fontSize = '28px';
@@ -149,6 +173,7 @@ function choiceLetterClickSuccess(letter) {
     }, 200);
 }
 
+// creates the game reset button
 function generateResetButton() {
     let reset = document.createElement("button");
     reset.onclick = gameRestart;
@@ -158,7 +183,7 @@ function generateResetButton() {
     optionsContainer.appendChild(reset)
 }
 
-function looseLife() {
+function lifeDecrement() {
     if (lives === 1) {
         gameOver();
     } else {
@@ -169,16 +194,23 @@ function looseLife() {
     }
 }
 
+function lifeReset() {
+    lives = 7;
+}
+
 function scoreDecrement(){
     score -= 1;
+    scoreUpdate();
 }
 
 function scoreIncrement() {
     score += 1;
+    scoreUpdate();
 }
 
 function scoreReset() {
     score = 0;
+    scoreUpdate()
 }
 
 function scoreUpdate() {
@@ -201,6 +233,21 @@ function gameStart(){
     getGuessWord();
 }
 
+// clears screen, calls new word, resets lives, maintains score, re
+function gameNewRound() {
+    while (choiceLetterContainer.firstChild) {
+        choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
+    }
+    while (guessLetterContainer.firstChild) {
+        guessLetterContainer.removeChild(guessLetterContainer.lastChild);
+    }
+    while (optionsContainer.firstChild) {
+        optionsContainer.removeChild(optionsContainer.lastChild);
+    }
+    lifeReset();
+    gameStart();
+}
+// clears screen, calls new word, resets score, resets lives
 function gameRestart() {
     while (choiceLetterContainer.firstChild) {
         choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
@@ -212,6 +259,7 @@ function gameRestart() {
         optionsContainer.removeChild(optionsContainer.lastChild);
     }
     scoreReset();
+    lifeReset();
     gameStart();
 }
 
