@@ -220,6 +220,8 @@ function scoreUpdate() {
 function gameOver() {
     alert("You loose.");
     console.log("You loose.");
+    // restart the game when a player looses
+    gameRestart();
 }
 
 function gameStop() {
