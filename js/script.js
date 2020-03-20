@@ -1,6 +1,8 @@
+const optionsContainer = document.querySelector('#optionsContainer');
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
 const guessLetterContainer = document.getElementById("guessLetterContainer");
-const optionsContainer = document.getElementById("optionsContainer");
+// const animationArea = document.getElementById("animationArea");  where our hangman will go
+const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 let wordList = [];
 let guessWord;
@@ -24,7 +26,12 @@ function getOwlAPIWord(word) {
             guessWordDefinition = data["definitions"][0]["definition"];
             console.log(data);
             console.log(data["definitions"][0]["definition"]);
-            generateGuessDefinition();
+            if(checkForOldDefinition){
+                let guessDefinition = document.querySelector('#guessDefinition');
+                guessDefinition.innerText = guessWordDefinition;
+            }else{
+                generateGuessDefinition();
+            }
         });
 }
 
@@ -83,15 +90,19 @@ function generateGuessLetters(){
     }
 }
 
+function checkForOldDefinition(){
+    return document.body.contains(document.querySelector('#guessDefinitionId'));
+}
+
+
 // generates the guess word definition from OWL API
 function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
     let guessDefinition = document.createElement('p');
     guessDefinition.id = guessDefinitionId;
     guessDefinition.innerText = guessWordDefinition;
-    guessDefinition.style.width = '40vh';
-    guessDefinition.style.height = '20vh';
-    guessLetterContainer.appendChild(guessDefinition);
+    guessDefinitionContainer.appendChild(guessDefinition);
+    // guessLetterContainer.appendChild(guessDefinition);   create new container to hold definition
 }
 
 // function for when choice letters are clicked
@@ -143,7 +154,8 @@ function wordIsGuessedFlair() {
     for (let i = 0; i < allGuessLetters.length; i++) {
         allGuessLetters[i].style.background = "lawngreen";
         allGuessLetters[i].style.fontWeight = "bolder";
-        allGuessLetters[i].style.fontSize = "5vh"
+        allGuessLetters[i].style.fontSize = "2vh";
+        allGuessLetters[i].style.color = 'black';
     }
 }
 
@@ -173,9 +185,8 @@ function choiceLetterClickSuccess(letter) {
 function generateResetButton() {
     let reset = document.createElement("button");
     reset.onclick = gameRestart;
-    reset.style.width = '12vh';
-    reset.style.height = '12vh';
     reset.innerText = "Reset";
+    reset.id='reset';
     optionsContainer.appendChild(reset)
 }
 
@@ -210,7 +221,7 @@ function scoreReset() {
 }
 
 function scoreUpdate() {
-    document.getElementById('score').innerHTML = "Score: " + score;
+    document.getElementById('scoreContainer').innerHTML = "Score: " + score;
 }
 
 function gameOver() {

@@ -1,37 +1,121 @@
-#choiceLetterContainer {
-    position: absolute;
-    display: table-cell;
-    transform: translate(-50%, -50%);
-    margin-left: 50%;
-    margin-top: 40%;
+#container {
+    display: grid;
+    width: 70%;
+    height: 95vh;
+    grid-template-rows: 0.1fr 10% 4fr 0.2fr 1fr;
+    grid-gap: 0.5%;
+    grid-template-areas:
+            "scoreContainer"
+            "optionsContainer"
+            "animationArea"
+            "guessLetterContainer"
+            "guessDefinition"
 }
 
-[id^="c-letter-"], [class$="guessLetter"] {
-    width: 8vh;
-    height: 8vh;
+button[id*="c-letter"]{
+    width: 5vw;
+    height: 7vh;
+    margin: 0.1%;
+    border-radius: 10px;
+    background-color: #60301d;
+    box-shadow: 1px 5px 30px #000000;
+    color: #e1d8bf;
 }
 
+
+button[class*="guessLetter"]{
+    width: 4vw;
+    height: 4vh;
+    margin: 0.1%;
+    border-radius: 10px;
+    background-color: #60301d;
+    box-shadow: 1px 5px 30px #000000;
+    color: #e1d8bf;
+}
+#reset{
+    margin: 0.1%;
+    border-radius: 10px;
+    background-color: #c21703;
+    box-shadow: 1px 5px 30px #000000;
+    color: #e1d8bf;
+
+}
+#scoreContainer{
+    grid-area: scoreContainer;
+    font-size: 2vh;
+
+
+}
+
+#optionsContainer {
+    grid-area: optionsContainer;
+}
+
+#animationArea {
+    grid-area: animationArea;
+}
 
 #guessLetterContainer {
-    position: absolute;
-    display: table-cell;
-    transform: translate(-50%, -50%);
-    margin-left: 50%;
-    margin-top: 20%;
+    grid-area: guessLetterContainer;
+}
+#guessDefinition {
+    grid-area: guessDefinition;
 }
 
-#score {
-    color: black;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 5vh;
+body {
+    background-color: #3b404e;
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+
 }
 
-html, body {
-    margin: 0;
-    height: 100%;
-    width: 100%;
+.item {
+    background-image: linear-gradient(135deg, #6e3723 0%, rgba(143, 65, 42, 0.95) 85%, rgb(164, 69, 47) 100%);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    border: 6px solid rgba(55, 39, 40, 0.82);
+    background-color: #6e3723;
+    color: #e1d8bf;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
 }
-#container {
-    max-height: 100%;
-    max-width: 100%;
+
+@media (max-width: 913px) {
+    button[id*="c-letter"]{
+        width: 7vw;
+        height: 7vh;
+        margin: 0.1%;
+        border-radius: 10px;
+        background-color: #60301d;
+        box-shadow: 1px 5px 30px #000000;
+        color: #e1d8bf;
+    }
+
+
+    button[class*="guessLetter"]{
+        width: 6vw;
+        height: 6vh;
+        margin: 0.1%;
+        border-radius: 10px;
+        background-color: #60301d;
+        box-shadow: 1px 5px 30px #000000;
+        color: #e1d8bf;
+    }
+
+    #container {
+        display: grid;
+        width: 100%;
+        height: 95vh;
+        grid-template-rows: 0.1fr 10% 4fr 0.2fr 1fr;
+        grid-gap: 0.5%;
+        grid-template-areas:
+                "scoreContainer"
+                "optionsContainer"
+                "animationArea"
+                "guessLetterContainer"
+                "guessDefinition"
+    }
 }
