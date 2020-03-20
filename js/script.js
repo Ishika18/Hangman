@@ -154,7 +154,8 @@ function wordIsGuessedFlair() {
     for (let i = 0; i < allGuessLetters.length; i++) {
         allGuessLetters[i].style.background = "lawngreen";
         allGuessLetters[i].style.fontWeight = "bolder";
-        allGuessLetters[i].style.fontSize = "5vh"
+        allGuessLetters[i].style.fontSize = "2vh";
+        allGuessLetters[i].style.color = 'black';
     }
 }
 
