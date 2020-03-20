@@ -6,6 +6,12 @@
     margin-top: 40%;
 }
 
+[id^="c-letter-"], [class$="guessLetter"] {
+    width: 8vh;
+    height: 8vh;
+}
+
+
 #guessLetterContainer {
     position: absolute;
     display: table-cell;

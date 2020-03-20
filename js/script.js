@@ -51,8 +51,6 @@ function generateChoiceLetters(){
         choiceLetter.id = choiceLetterId;
         choiceLetter.onclick = choiceLetterClick;
         choiceLetter.innerText = alphabet[i].toUpperCase();
-        choiceLetter.style.width = '8vh';
-        choiceLetter.style.height = '8vh';
         // show right alphabets when the button is clicked
         choiceLetter.onclick = choiceLetterClick;
         choiceLetterContainer.appendChild(choiceLetter);
@@ -81,8 +79,6 @@ function generateGuessLetters(){
         guessLetter.classList.add("guessLetter");
         // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
-        guessLetter.style.width = '8vh';
-        guessLetter.style.height = '8vh';
         guessLetterContainer.appendChild(guessLetter);
     }
 }
@@ -220,6 +216,8 @@ function scoreUpdate() {
 function gameOver() {
     alert("You loose.");
     console.log("You loose.");
+    // restart the game when a player looses
+    gameRestart();
 }
 
 function gameStop() {
