@@ -1,7 +1,7 @@
 const optionsContainer = document.querySelector('#optionsContainer');
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
 const guessLetterContainer = document.getElementById("guessLetterContainer");
-// const animationArea = document.getElementById("animationArea");  where our hangman will go
+const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 let wordList = [];
@@ -9,6 +9,7 @@ let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
+let highgroundvideo;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -41,12 +42,15 @@ fetch("src/wordlist.json")
     .then(data => {
         wordList = data;
         console.log(data);
+        generateMedia();
         main();
     });
 
 // main call
 function main(){
-    gameStart()
+    gameStart();
+    mediaVisible();
+    restartVid();
 }
 
 // generates choice letters
@@ -114,6 +118,7 @@ function choiceLetterClick() {
     // if no letter is present decrease the score
     if (elementsArray.length === 0) {
         choiceLetterClickFail(choiceLetterClicked);
+        hangMediaPlay();
         scoreDecrement();
         lifeDecrement();
     } else {
@@ -225,7 +230,6 @@ function scoreUpdate() {
 }
 
 function gameOver() {
-    alert("You loose.");
     console.log("You loose.");
     // restart the game when a player looses
     gameRestart();
@@ -272,26 +276,6 @@ function gameRestart() {
     gameStart();
 }
 
-function musicToggle() {
-    if (musicPlaying === false) {
-        musicPlaying = true;
-        playAudio(audioMusic)
-    } else {
-        musicPlaying = false;
-        pauseAudio(audioMusic)
-    }
-}
-
-function playAudio(audioID) {
-    audioID.play();
-    // loop the audio
-    audioID.loop = true;
-}
-
-function pauseAudio(audioID) {
-    audioID.pause();
-}
-
 function startStop(){
     if (gamePlaying === false) {
         gamePlaying = true;
@@ -314,59 +298,70 @@ function startStop(){
     }
 }
 
-function difficulty_setting() {
-    if (gamePlaying) {
-        return
+// <video id="myVideo" width="320" height="176">
+//     <source src="mov_bbb.mp4" type="video/mp4">
+//     <source src="mov_bbb.ogg" type="video/ogg">
+//     Your browser does not support HTML5 video.
+// </video>
+
+function generateMedia(){
+    let mediaId = 'media';
+    let media = document.createElement('video');
+    media.id = mediaId;
+    media.src = "src/highground.mp4";
+    media.type = "video/mp4";
+    media.preload = "auto";
+    media.style.width = "50em";
+    media.style.height = "30em";
+    media.style.visibility = "hidden";
+    animationArea.appendChild(media);
+    highgroundvideo = document.getElementById("media");
+}
+
+function mediaVisible() {
+    highgroundvideo.style.visibility = "visible"
+}
+
+function hangMediaPlay() {
+    if(lives === 7) {
+        highgroundvideo.currentTime = 0;
+        playVid();
+        setTimeout(pauseVid, 2000)
+    } else if(lives === 6) {
+        highgroundvideo.currentTime = 2.0;
+        playVid();
+        setTimeout(pauseVid, 1500)
+    } else if(lives === 5) {
+        highgroundvideo.currentTime = 3.5;
+        playVid();
+        setTimeout(pauseVid, 2500)
+    } else if(lives === 4) {
+        highgroundvideo.currentTime = 6.0;
+        playVid();
+        setTimeout(pauseVid, 2400)
+    } else if(lives === 3) {
+        highgroundvideo.currentTime = 8.4;
+        playVid();
+        setTimeout(pauseVid, 2600)
+    } else if(lives === 2) {
+        highgroundvideo.currentTime = 11.0;
+        playVid();
+        setTimeout(pauseVid, 3000)
+    } else if(lives === 1) {
+        highgroundvideo.currentTime = 14.0;
+        playVid();
     }
-    gameDifficulty++;
-    if (gameDifficulty === 5) {
-        gameDifficulty = 1
-    }
-    if (gameDifficulty === 1) {
-        gameDifficultyTimer = 2200;
-        gameDifficultySpeed = 0.9;
-        difficultyBtn.innerHTML = 'Easy';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'lawngreen';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 2) {
-        gameDifficultyTimer = 1200;
-        gameDifficultySpeed = 1.1;
-        difficultyBtn.innerHTML = 'Medium';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'yellow';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 3) {
-        gameDifficultyTimer = 900;
-        gameDifficultySpeed = 1.2;
-        difficultyBtn.innerHTML = 'Hard';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'orange';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 4) {
-        gameDifficultyTimer = 800;
-        gameDifficultySpeed = 1.3;
-        difficultyBtn.innerHTML = 'NIGHTMARE';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'red';
-        }, 200);
-    }
+}
+
+function playVid() {
+    highgroundvideo.play();
+}
+
+function pauseVid() {
+    highgroundvideo.pause();
+}
+
+function restartVid() {
+    highgroundvideo.currentTime = 0;
+    pauseVid();
 }
