@@ -14,7 +14,7 @@ let score = 0;
 let lives = 7;
 let highgroundvideo;
 let gamePlaying = false;
-//let gameStartingFirstTime = true;
+let gameStartingFirstTime = true;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -207,7 +207,13 @@ function generateStartStopButton() {
     let startStopBtn = document.createElement("button");
     startStopBtn.onclick = startStop(startStopBtn);
     startStopBtn.id = 'startStop';
-    startStopBtn.innerText = "Start";
+    if (gameStartingFirstTime) {
+        startStopBtn.innerText = "Start";
+        gameStartingFirstTime = false;
+    }
+    else {
+        startStopBtn.innerText = 'Stop';
+    }
     optionsContainer.appendChild(startStopBtn);
 }
 
