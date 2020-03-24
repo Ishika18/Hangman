@@ -13,6 +13,8 @@ let guessWordDefinition;
 let score = 0;
 let lives = 7;
 let highgroundvideo;
+let gamePlaying = false;
+let gameStartingFirstTime = true;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -51,7 +53,9 @@ fetch("src/wordlist.json")
 
 // main call
 function main(){
-    gameStart();
+    generateStartStopButton();
+    // generateResetButton();
+    // gameStart();
     mediaVisible();
     restartVid();
 }
@@ -198,6 +202,15 @@ function generateResetButton() {
     optionsContainer.appendChild(reset)
 }
 
+// creates start stop button
+function generateStartStopButton() {
+    let startStopBtn = document.createElement("button");
+    startStopBtn.onclick = startStop(startStopBtn);
+    startStopBtn.id = 'startStop';
+    startStopBtn.innerText = "Start";
+    optionsContainer.appendChild(startStopBtn);
+}
+
 function lifeDecrement() {
     if (lives === 1) {
         gameOver();
@@ -235,19 +248,25 @@ function scoreUpdate() {
 function gameOver() {
     console.log("You loose.");
     // ask the player for their name for the leaderboard
-    userName = prompt("Write your name")
-    updateLeaderboard(userName, score);
-    // restart the game when a player looses
+    gameStop();
+    // restart the game when a player looses, will be changed if the leaderboard is changed.
     gameRestart();
 }
 
 function gameStop() {
+    userName = prompt("Write your name")
+    updateLeaderboard(userName, score);
 
+    // show the user the leaderboard
 }
 
 // start the game
 function gameStart(){
-    generateResetButton();
+    if (gameStartingFirstTime == true) {
+        // if the game has not started add a restart button, to prevent button addition again and again
+        generateResetButton();
+        gameStartingFirstTime = false;
+    }
     generateChoiceLetters();
     getGuessWord();
 }
@@ -279,28 +298,32 @@ function gameRestart() {
     }
     scoreReset();
     lifeReset();
+    generateStartStopButton();
+    generateResetButton();
     gameStart();
 }
 
-function startStop(){
-    if (gamePlaying === false) {
-        gamePlaying = true;
-        startStopBtn.innerText = 'Stop';
-        startStopBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            startStopBtn.style.fontSize = '20px';
-        }, 200);
-        gameStart();
-        return
-    }
-    if (gamePlaying === true) {
-        gamePlaying = false;
-        startStopBtn.innerText = 'Start';
-        startStopBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            startStopBtn.style.fontSize = '20px';
-        }, 200);
-        gameStop();
+function startStop(startStopBtn){
+    return function() {
+        if (gamePlaying === false) {
+            gamePlaying = true;
+            startStopBtn.innerText = 'Stop';
+            startStopBtn.style.fontSize = '28px';
+            setTimeout(function () {
+                startStopBtn.style.fontSize = '20px';
+            }, 200);
+            gameStart();
+            return;
+        }
+        if (gamePlaying === true) {
+            gamePlaying = false;
+            startStopBtn.innerText = 'Start';
+            startStopBtn.style.fontSize = '28px';
+            setTimeout(function () {
+                startStopBtn.style.fontSize = '20px';
+            }, 200);
+            gameStop();
+        }
     }
 }
 

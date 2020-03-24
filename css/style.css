@@ -32,7 +32,7 @@ button[class*="guessLetter"]{
     box-shadow: 1px 5px 30px #000000;
     color: #e1d8bf;
 }
-#reset{
+#reset, #startStop {
     margin: 0.1%;
     border-radius: 10px;
     background-color: #c21703;
