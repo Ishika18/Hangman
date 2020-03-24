@@ -12,6 +12,9 @@ let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
+let highgroundvideo;
+let gamePlaying = false;
+let gameStartingFirstTime = true;
 let highGroundVideo;
 let videoPauseTime;
 
@@ -52,7 +55,9 @@ fetch("src/wordlist.json")
 
 // main call
 function main(){
-    gameStart();
+    generateStartStopButton();
+    // generateResetButton();
+    // gameStart();
     mediaVisible();
     restartVid();
 }
@@ -197,6 +202,21 @@ function generateResetButton() {
     optionsContainer.appendChild(reset)
 }
 
+// creates start stop button
+function generateStartStopButton() {
+    let startStopBtn = document.createElement("button");
+    startStopBtn.onclick = startStop(startStopBtn);
+    startStopBtn.id = 'startStop';
+    if (gameStartingFirstTime) {
+        startStopBtn.innerText = "Start";
+        gameStartingFirstTime = false;
+    }
+    else {
+        startStopBtn.innerText = 'Stop';
+    }
+    optionsContainer.appendChild(startStopBtn);
+}
+
 function lifeDecrement() {
     if (lives === 1) {
         gameOver();
@@ -232,14 +252,16 @@ function scoreUpdate() {
 function gameOver() {
     console.log("You loose.");
     // ask the player for their name for the leaderboard
-    userName = prompt("Write your name");
-    updateLeaderboard(userName, score);
-    // restart the game when a player looses
+    gameStop();
+    // restart the game when a player looses, will be changed if the leaderboard is changed.
     gameRestart();
 }
 
 function gameStop() {
+    userName = prompt("Write your name")
+    updateLeaderboard(userName, score);
 
+    // show the user the leaderboard
 }
 
 // start the game
@@ -276,28 +298,33 @@ function gameRestart() {
     }
     scoreReset();
     lifeReset();
+    generateStartStopButton();
+    // generateResetButton();
     gameStart();
 }
 
-function startStop(){
-    if (gamePlaying === false) {
-        gamePlaying = true;
-        startStopBtn.innerText = 'Stop';
-        startStopBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            startStopBtn.style.fontSize = '20px';
-        }, 200);
-        gameStart();
-        return
-    }
-    if (gamePlaying === true) {
-        gamePlaying = false;
-        startStopBtn.innerText = 'Start';
-        startStopBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            startStopBtn.style.fontSize = '20px';
-        }, 200);
-        gameStop();
+function startStop(startStopBtn){
+    return function() {
+        if (gamePlaying === false) {
+            gamePlaying = true;
+            startStopBtn.style.fontSize = '28px';
+            setTimeout(function () {
+                startStopBtn.style.fontSize = '20px';
+            }, 200);
+            gameRestart();
+            console.log("this works")
+            startStopBtn.innerText = 'Stop';
+            return;
+        }
+        if (gamePlaying === true) {
+            gamePlaying = false;
+            startStopBtn.innerText = 'Start';
+            startStopBtn.style.fontSize = '28px';
+            setTimeout(function () {
+                startStopBtn.style.fontSize = '20px';
+            }, 200);
+            gameStop();
+        }
     }
 }
 
@@ -366,8 +393,10 @@ function restartVid() {
 }
 
 function updateLeaderboard(userName, score) {
+    // generating a random id (as two userName can be same.)
+    const autoId = rootRef.push().key;
     // add the information of users in database
-    rootRef.child(userName).set({
+    rootRef.child(autoId).set({
         userName: userName,
         score: score
     });
@@ -383,10 +412,13 @@ function gotData(data) {
     console.log(data.val());
 
     let scores = data.val();
-    let userNames = Object.keys(scores);
-    for (let i = 0; i < userNames.length; i++) {
-        let userName = userNames[i];
-        let score = scores[userName].score;
+    let keys = Object.keys(scores);
+    console.log(scores)
+    console.log(keys);
+    for (let i = 0; i < keys.length; i++) {
+        key = keys[i]
+        let userName = scores[key].userName;
+        let score = scores[key].score;
         console.log(userName, score);
     }
 }
