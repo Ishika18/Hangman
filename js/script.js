@@ -379,3 +379,28 @@ function updateLeaderboard(userName, score) {
         score: score
     });
 }
+
+function showLeaderboard() {
+    console.log("showleaderboard works");
+    rootRef.on('value', gotData, errData);
+}
+
+// get the data from the fireabase
+function gotData(data) {
+    console.log(data.val());
+
+    let scores = data.val();
+    let userNames = Object.keys(scores);
+    for (let i = 0; i < userNames.length; i++) {
+        let userName = userNames[i];
+        let score = scores[userName].score;
+        console.log(userName, score);
+    }
+}
+
+function errData(err) {
+    console.log("Error");
+    console.log(err);
+}
+
+showLeaderboard();
