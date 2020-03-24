@@ -102,7 +102,6 @@ function checkForOldDefinition(){
     return document.body.contains(document.querySelector('#guessDefinitionId'));
 }
 
-
 // generates the guess word definition from OWL API
 function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
@@ -167,7 +166,6 @@ function wordIsGuessedFlair() {
         allGuessLetters[i].style.color = 'black';
     }
 }
-
 
 // changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
@@ -310,8 +308,6 @@ function generateMedia(){
     media.src = "src/highground.mp4";
     media.type = "video/mp4";
     media.preload = "auto";
-    media.style.width = "50em";
-    media.style.height = "30em";
     media.style.visibility = "hidden";
     media.ontimeupdate = () => {
         if (highGroundVideo.currentTime >= videoPauseTime) {
