@@ -22,7 +22,6 @@ button[id*="c-letter"]{
     color: #e1d8bf;
 }
 
-
 button[class*="guessLetter"]{
     width: 4vw;
     height: 4vh;
@@ -32,42 +31,31 @@ button[class*="guessLetter"]{
     box-shadow: 1px 5px 30px #000000;
     color: #e1d8bf;
 }
+
+#media{width:100%;}
+
 #reset{
     margin: 0.1%;
     border-radius: 10px;
     background-color: #c21703;
     box-shadow: 1px 5px 30px #000000;
     color: #e1d8bf;
-
 }
 #scoreContainer{
     grid-area: scoreContainer;
     font-size: 2vh;
-
-
 }
 
-#optionsContainer {
-    grid-area: optionsContainer;
-}
-
-#animationArea {
-    grid-area: animationArea;
-}
-
-#guessLetterContainer {
-    grid-area: guessLetterContainer;
-}
-#guessDefinition {
-    grid-area: guessDefinition;
-}
+#optionsContainer {grid-area: optionsContainer;}
+#animationArea {grid-area: animationArea;}
+#guessLetterContainer {grid-area: guessLetterContainer;}
+#guessDefinition {grid-area: guessDefinition;}
 
 body {
     background-color: #3b404e;
     display: flex;
     padding: 5px;
     justify-content: center;
-
 }
 
 .item {
@@ -80,7 +68,6 @@ body {
     justify-content: center;
     align-items: center;
     display: flex;
-
 }
 
 @media (max-width: 913px) {
@@ -93,8 +80,7 @@ body {
         box-shadow: 1px 5px 30px #000000;
         color: #e1d8bf;
     }
-
-
+    
     button[class*="guessLetter"]{
         width: 6vw;
         height: 6vh;

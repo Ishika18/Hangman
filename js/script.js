@@ -1,14 +1,19 @@
 const optionsContainer = document.querySelector('#optionsContainer');
 const choiceLetterContainer = document.getElementById("choiceLetterContainer");
 const guessLetterContainer = document.getElementById("guessLetterContainer");
-// const animationArea = document.getElementById("animationArea");  where our hangman will go
+const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+// instance of firebase database
+const database = firebase.database();
+const rootRef = database.ref('leaderboard');
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
+let highGroundVideo;
+let videoPauseTime;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -41,12 +46,15 @@ fetch("src/wordlist.json")
     .then(data => {
         wordList = data;
         console.log(data);
+        generateMedia();
         main();
     });
 
 // main call
 function main(){
-    gameStart()
+    gameStart();
+    mediaVisible();
+    restartVid();
 }
 
 // generates choice letters
@@ -94,7 +102,6 @@ function checkForOldDefinition(){
     return document.body.contains(document.querySelector('#guessDefinitionId'));
 }
 
-
 // generates the guess word definition from OWL API
 function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
@@ -114,6 +121,7 @@ function choiceLetterClick() {
     // if no letter is present decrease the score
     if (elementsArray.length === 0) {
         choiceLetterClickFail(choiceLetterClicked);
+        hangMediaPlay();
         scoreDecrement();
         lifeDecrement();
     } else {
@@ -159,7 +167,6 @@ function wordIsGuessedFlair() {
     }
 }
 
-
 // changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
     letter.style.color = 'black';
@@ -196,8 +203,6 @@ function lifeDecrement() {
     } else {
         lives -= 1;
         console.log(lives);
-
-        // some animation of loose life.
     }
 }
 
@@ -225,8 +230,10 @@ function scoreUpdate() {
 }
 
 function gameOver() {
-    alert("You loose.");
     console.log("You loose.");
+    // ask the player for their name for the leaderboard
+    userName = prompt("Write your name");
+    updateLeaderboard(userName, score);
     // restart the game when a player looses
     gameRestart();
 }
@@ -272,26 +279,6 @@ function gameRestart() {
     gameStart();
 }
 
-function musicToggle() {
-    if (musicPlaying === false) {
-        musicPlaying = true;
-        playAudio(audioMusic)
-    } else {
-        musicPlaying = false;
-        pauseAudio(audioMusic)
-    }
-}
-
-function playAudio(audioID) {
-    audioID.play();
-    // loop the audio
-    audioID.loop = true;
-}
-
-function pauseAudio(audioID) {
-    audioID.pause();
-}
-
 function startStop(){
     if (gamePlaying === false) {
         gamePlaying = true;
@@ -314,59 +301,101 @@ function startStop(){
     }
 }
 
-function difficulty_setting() {
-    if (gamePlaying) {
-        return
-    }
-    gameDifficulty++;
-    if (gameDifficulty === 5) {
-        gameDifficulty = 1
-    }
-    if (gameDifficulty === 1) {
-        gameDifficultyTimer = 2200;
-        gameDifficultySpeed = 0.9;
-        difficultyBtn.innerHTML = 'Easy';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'lawngreen';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 2) {
-        gameDifficultyTimer = 1200;
-        gameDifficultySpeed = 1.1;
-        difficultyBtn.innerHTML = 'Medium';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'yellow';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 3) {
-        gameDifficultyTimer = 900;
-        gameDifficultySpeed = 1.2;
-        difficultyBtn.innerHTML = 'Hard';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'orange';
-        }, 200);
-        return
-    }
-    if (gameDifficulty === 4) {
-        gameDifficultyTimer = 800;
-        gameDifficultySpeed = 1.3;
-        difficultyBtn.innerHTML = 'NIGHTMARE';
-        difficultyBtn.style.color = '#e7e7e7';
-        difficultyBtn.style.fontSize = '28px';
-        setTimeout(function () {
-            difficultyBtn.style.fontSize = '20px';
-            difficultyBtn.style.color = 'red';
-        }, 200);
+function generateMedia(){
+    let mediaId = 'media';
+    let media = document.createElement('video');
+    media.id = mediaId;
+    media.src = "src/highground.mp4";
+    media.type = "video/mp4";
+    media.preload = "auto";
+    // media.style.width = "50em";
+    // media.style.height = "30em";
+    media.style.visibility = "hidden";
+    media.ontimeupdate = () => {
+        if (highGroundVideo.currentTime >= videoPauseTime) {
+            pauseVid()
+        }
+    };
+    animationArea.appendChild(media);
+    highGroundVideo = document.getElementById("media");
+}
+
+// // pauses video if you get the your current lives left
+// highGroundVideo.ontimeupdate = () => {
+//
+// };
+
+function mediaVisible() {
+    highGroundVideo.style.visibility = "visible"
+}
+
+function hangMediaPlay() {
+    if(lives === 7) {
+        videoPauseTime = 2.0;
+        playVid();
+    } else if(lives === 6) {
+        videoPauseTime = 3.5;
+        playVid();
+    } else if(lives === 5) {
+        videoPauseTime = 6.0;
+        playVid();
+    } else if(lives === 4) {
+        videoPauseTime = 8.4;
+        playVid();
+    } else if(lives === 3) {
+        videoPauseTime = 11.0;
+        playVid();
+    } else if(lives === 2) {
+        videoPauseTime = 14.0;
+        playVid();
+    } else if(lives === 1) {
+        videoPauseTime = 20.0;
+        playVid();
     }
 }
+
+function playVid() {
+    highGroundVideo.play();
+}
+
+function pauseVid() {
+    highGroundVideo.pause();
+}
+
+function restartVid() {
+    highGroundVideo.currentTime = 0;
+    pauseVid();
+}
+
+function updateLeaderboard(userName, score) {
+    // add the information of users in database
+    rootRef.child(userName).set({
+        userName: userName,
+        score: score
+    });
+}
+
+function showLeaderboard() {
+    console.log("showleaderboard works");
+    rootRef.on('value', gotData, errData);
+}
+
+// get the data from the firebase
+function gotData(data) {
+    console.log(data.val());
+
+    let scores = data.val();
+    let userNames = Object.keys(scores);
+    for (let i = 0; i < userNames.length; i++) {
+        let userName = userNames[i];
+        let score = scores[userName].score;
+        console.log(userName, score);
+    }
+}
+
+function errData(err) {
+    console.log("Error");
+    console.log(err);
+}
+
+showLeaderboard();
