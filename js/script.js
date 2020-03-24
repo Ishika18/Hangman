@@ -107,7 +107,6 @@ function checkForOldDefinition(){
     return document.body.contains(document.querySelector('#guessDefinitionId'));
 }
 
-
 // generates the guess word definition from OWL API
 function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
@@ -172,7 +171,6 @@ function wordIsGuessedFlair() {
         allGuessLetters[i].style.color = 'black';
     }
 }
-
 
 // changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
@@ -268,11 +266,6 @@ function gameStop() {
 
 // start the game
 function gameStart(){
-    // if (gameStartingFirstTime == true) {
-    //     // if the game has not started add a restart button, to prevent button addition again and again
-        
-    //     gameStartingFirstTime = false;
-    // }
     generateResetButton();
     generateChoiceLetters();
     getGuessWord();
@@ -342,8 +335,6 @@ function generateMedia(){
     media.src = "src/highground.mp4";
     media.type = "video/mp4";
     media.preload = "auto";
-    media.style.width = "50em";
-    media.style.height = "30em";
     media.style.visibility = "hidden";
     media.ontimeupdate = () => {
         if (highGroundVideo.currentTime >= videoPauseTime) {
@@ -422,9 +413,12 @@ function gotData(data) {
 
     let scores = data.val();
     let keys = Object.keys(scores);
+    console.log(scores)
+    console.log(keys);
     for (let i = 0; i < keys.length; i++) {
-        let userName = keys[i].userName;
-        let score = keys[i].score;
+        key = keys[i]
+        let userName = scores[key].userName;
+        let score = scores[key].score;
         console.log(userName, score);
     }
 }
