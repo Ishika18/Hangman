@@ -34,5 +34,31 @@
         <div id="choiceLetterContainer"></div>
     </div>
 </body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<!-- CDN link for the database. -->
+<script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyADqkVT5KvuhyA2gl7vxYroi1uDJG-m1JU",
+    authDomain: "hangman-bf0c9.firebaseapp.com",
+    databaseURL: "https://hangman-bf0c9.firebaseio.com",
+    projectId: "hangman-bf0c9",
+    storageBucket: "hangman-bf0c9.appspot.com",
+    messagingSenderId: "1084696534005",
+    appId: "1:1084696534005:web:6587f1804ef01e7c9d9ebc",
+    measurementId: "G-ZBC4Q9NT8H"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
 <script type="text/javascript" src="js/script.js"></script>
 </html>
