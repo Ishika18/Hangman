@@ -14,7 +14,7 @@ let score = 0;
 let lives = 7;
 let highgroundvideo;
 let gamePlaying = false;
-let gameStartingFirstTime = true;
+//let gameStartingFirstTime = true;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -262,11 +262,12 @@ function gameStop() {
 
 // start the game
 function gameStart(){
-    if (gameStartingFirstTime == true) {
-        // if the game has not started add a restart button, to prevent button addition again and again
-        generateResetButton();
-        gameStartingFirstTime = false;
-    }
+    // if (gameStartingFirstTime == true) {
+    //     // if the game has not started add a restart button, to prevent button addition again and again
+        
+    //     gameStartingFirstTime = false;
+    // }
+    generateResetButton();
     generateChoiceLetters();
     getGuessWord();
 }
@@ -299,7 +300,7 @@ function gameRestart() {
     scoreReset();
     lifeReset();
     generateStartStopButton();
-    generateResetButton();
+    // generateResetButton();
     gameStart();
 }
 
@@ -307,12 +308,13 @@ function startStop(startStopBtn){
     return function() {
         if (gamePlaying === false) {
             gamePlaying = true;
-            startStopBtn.innerText = 'Stop';
             startStopBtn.style.fontSize = '28px';
             setTimeout(function () {
                 startStopBtn.style.fontSize = '20px';
             }, 200);
-            gameStart();
+            gameRestart();
+            console.log("this works")
+            startStopBtn.innerText = 'Stop';
             return;
         }
         if (gamePlaying === true) {
