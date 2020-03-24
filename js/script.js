@@ -308,8 +308,6 @@ function generateMedia(){
     media.src = "src/highground.mp4";
     media.type = "video/mp4";
     media.preload = "auto";
-    // media.style.width = "50em";
-    // media.style.height = "30em";
     media.style.visibility = "hidden";
     media.ontimeupdate = () => {
         if (highGroundVideo.currentTime >= videoPauseTime) {
