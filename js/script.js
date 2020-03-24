@@ -12,7 +12,8 @@ let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
-let highgroundvideo;
+let highGroundVideo;
+let videoPauseTime;
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -204,8 +205,6 @@ function lifeDecrement() {
     } else {
         lives -= 1;
         console.log(lives);
-
-        // some animation of loose life.
     }
 }
 
@@ -235,7 +234,7 @@ function scoreUpdate() {
 function gameOver() {
     console.log("You loose.");
     // ask the player for their name for the leaderboard
-    userName = prompt("Write your name")
+    userName = prompt("Write your name");
     updateLeaderboard(userName, score);
     // restart the game when a player looses
     gameRestart();
@@ -304,12 +303,6 @@ function startStop(){
     }
 }
 
-// <video id="myVideo" width="320" height="176">
-//     <source src="mov_bbb.mp4" type="video/mp4">
-//     <source src="mov_bbb.ogg" type="video/ogg">
-//     Your browser does not support HTML5 video.
-// </video>
-
 function generateMedia(){
     let mediaId = 'media';
     let media = document.createElement('video');
@@ -320,55 +313,59 @@ function generateMedia(){
     media.style.width = "50em";
     media.style.height = "30em";
     media.style.visibility = "hidden";
+    media.ontimeupdate = () => {
+        if (highGroundVideo.currentTime >= videoPauseTime) {
+            pauseVid()
+        }
+    };
     animationArea.appendChild(media);
-    highgroundvideo = document.getElementById("media");
+    highGroundVideo = document.getElementById("media");
 }
 
+// // pauses video if you get the your current lives left
+// highGroundVideo.ontimeupdate = () => {
+//
+// };
+
 function mediaVisible() {
-    highgroundvideo.style.visibility = "visible"
+    highGroundVideo.style.visibility = "visible"
 }
 
 function hangMediaPlay() {
     if(lives === 7) {
-        highgroundvideo.currentTime = 0;
+        videoPauseTime = 2.0;
         playVid();
-        setTimeout(pauseVid, 2000)
     } else if(lives === 6) {
-        highgroundvideo.currentTime = 2.0;
+        videoPauseTime = 3.5;
         playVid();
-        setTimeout(pauseVid, 1500)
     } else if(lives === 5) {
-        highgroundvideo.currentTime = 3.5;
+        videoPauseTime = 6.0;
         playVid();
-        setTimeout(pauseVid, 2500)
     } else if(lives === 4) {
-        highgroundvideo.currentTime = 6.0;
+        videoPauseTime = 8.4;
         playVid();
-        setTimeout(pauseVid, 2400)
     } else if(lives === 3) {
-        highgroundvideo.currentTime = 8.4;
+        videoPauseTime = 11.0;
         playVid();
-        setTimeout(pauseVid, 2600)
     } else if(lives === 2) {
-        highgroundvideo.currentTime = 11.0;
+        videoPauseTime = 14.0;
         playVid();
-        setTimeout(pauseVid, 3000)
     } else if(lives === 1) {
-        highgroundvideo.currentTime = 14.0;
+        videoPauseTime = 20.0;
         playVid();
     }
 }
 
 function playVid() {
-    highgroundvideo.play();
+    highGroundVideo.play();
 }
 
 function pauseVid() {
-    highgroundvideo.pause();
+    highGroundVideo.pause();
 }
 
 function restartVid() {
-    highgroundvideo.currentTime = 0;
+    highGroundVideo.currentTime = 0;
     pauseVid();
 }
 
@@ -385,7 +382,7 @@ function showLeaderboard() {
     rootRef.on('value', gotData, errData);
 }
 
-// get the data from the fireabase
+// get the data from the firebase
 function gotData(data) {
     console.log(data.val());
 
