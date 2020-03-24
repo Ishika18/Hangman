@@ -402,8 +402,10 @@ function restartVid() {
 }
 
 function updateLeaderboard(userName, score) {
+    // generating a random id (as two userName can be same.)
+    const autoId = rootRef.push().key;
     // add the information of users in database
-    rootRef.child(userName).set({
+    rootRef.child(autoId).set({
         userName: userName,
         score: score
     });
@@ -419,10 +421,10 @@ function gotData(data) {
     console.log(data.val());
 
     let scores = data.val();
-    let userNames = Object.keys(scores);
-    for (let i = 0; i < userNames.length; i++) {
-        let userName = userNames[i];
-        let score = scores[userName].score;
+    let keys = Object.keys(scores);
+    for (let i = 0; i < keys.length; i++) {
+        let userName = keys[i].userName;
+        let score = keys[i].score;
         console.log(userName, score);
     }
 }
