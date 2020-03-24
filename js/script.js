@@ -4,6 +4,9 @@ const guessLetterContainer = document.getElementById("guessLetterContainer");
 const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+// instance of firebase database
+const database = firebase.database();
+const rootRef = database.ref('leaderboard');
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
@@ -231,6 +234,9 @@ function scoreUpdate() {
 
 function gameOver() {
     console.log("You loose.");
+    // ask the player for their name for the leaderboard
+    userName = prompt("Write your name")
+    updateLeaderboard(userName, score);
     // restart the game when a player looses
     gameRestart();
 }
@@ -364,4 +370,12 @@ function pauseVid() {
 function restartVid() {
     highgroundvideo.currentTime = 0;
     pauseVid();
+}
+
+function updateLeaderboard(userName, score) {
+    // add the information of users in database
+    rootRef.child(userName).set({
+        userName: userName,
+        score: score
+    });
 }
