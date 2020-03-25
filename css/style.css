@@ -1,3 +1,16 @@
+@font-face {
+    font-family: starJedi;
+    src: url('../font/Starjedi.ttf')
+}
+@font-face {
+    font-family: workPlease;
+    font-weight: normal;
+    src: url('../font/SfDistantGalaxy-0l3d.ttf')
+}
+@font-face {
+    font-family: serifGothic; 
+    src: url('../font/SerifGothicStd-bold.otf');
+}
 #container {
     display: grid;
     width: 70%;
@@ -11,15 +24,20 @@
             "guessLetterContainer"
             "guessDefinition"
 }
-
+#choiceLetterContainer {
+    justify-content: center;
+    align-items: center;
+}
 button[id*="c-letter"]{
     width: 5vw;
     height: 7vh;
-    margin: 0.1%;
+    margin: auto;
     border-radius: 10px;
     background-color: #60301d;
     box-shadow: 1px 5px 30px #000000;
-    color: #e1d8bf;
+    color: yellow;
+    font-family: workPlease;
+    font-size: 2vw;
 }
 
 button[class*="guessLetter"]{
@@ -29,7 +47,7 @@ button[class*="guessLetter"]{
     border-radius: 10px;
     background-color: #60301d;
     box-shadow: 1px 5px 30px #000000;
-    color: #e1d8bf;
+    color: yellow;
 }
 
 #media{width:100%;}
@@ -39,11 +57,13 @@ button[class*="guessLetter"]{
     border-radius: 10px;
     background-color: #c21703;
     box-shadow: 1px 5px 30px #000000;
-    color: #e1d8bf;
+    color: yellow;
+    font-family: starJedi;
 }
 #scoreContainer{
     grid-area: scoreContainer;
     font-size: 2vh;
+    font-family: starJedi;
 }
 
 #optionsContainer {grid-area: optionsContainer;}
@@ -52,10 +72,15 @@ button[class*="guessLetter"]{
 #guessDefinition {grid-area: guessDefinition;}
 
 body {
-    background-color: #3b404e;
+    background-image: url('../images/background.jpg');
+    background-size: 100% 100%;
     display: flex;
     padding: 5px;
     justify-content: center;
+    font-family: serifGothic;
+
+    color:yellow;
+    font-size: 1vw;
 }
 
 .item {
@@ -63,11 +88,11 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     border: 6px solid rgba(55, 39, 40, 0.82);
     background-color: #6e3723;
-    color: #e1d8bf;
     border-radius: 4px;
     justify-content: center;
     align-items: center;
     display: flex;
+    font-size: 2vh;
 }
 
 @media (max-width: 913px) {
@@ -78,7 +103,6 @@ body {
         border-radius: 10px;
         background-color: #60301d;
         box-shadow: 1px 5px 30px #000000;
-        color: #e1d8bf;
     }
     
     button[class*="guessLetter"]{
@@ -88,7 +112,6 @@ body {
         border-radius: 10px;
         background-color: #60301d;
         box-shadow: 1px 5px 30px #000000;
-        color: #e1d8bf;
     }
 
     #container {
@@ -104,12 +127,4 @@ body {
                 "guessLetterContainer"
                 "guessDefinition"
     }
-}
-
-#startStop{
-    margin: 0.1%;
-    border-radius: 10px;
-    background-color: #c21703;
-    box-shadow: 1px 5px 30px #000000;
-    color: #e1d8bf;
 }
