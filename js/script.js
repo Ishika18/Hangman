@@ -261,7 +261,7 @@ function gameOver() {
 }
 
 function gameStop() {
-    userName = prompt("Write your name")
+    userName = prompt("You score is: "+ score + " Write your name: ");
     updateLeaderboard(userName, score);
 
     // show the user the leaderboard
