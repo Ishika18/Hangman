@@ -283,6 +283,7 @@ function gameNewRound() {
         optionsContainer.removeChild(optionsContainer.lastChild);
     }
     lifeReset();
+    generateStartStopButton();
     gameStart();
 }
 // clears screen, calls new word, resets score, resets lives
