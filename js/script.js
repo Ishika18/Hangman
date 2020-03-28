@@ -17,6 +17,7 @@ let gamePlaying = false;
 let gameStartingFirstTime = true;
 let highGroundVideo;
 let videoPauseTime;
+let clapAudio = new Audio('src/claps3.mp3');
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -163,6 +164,8 @@ function checkIfWordIsGuessed() {
 
 // flair for when player guesses the word correctly
 function wordIsGuessedFlair() {
+    // play a clap audio
+    clapAudio.play();
     let allGuessLetters = document.getElementsByClassName("guessLetter");
     for (let i = 0; i < allGuessLetters.length; i++) {
         allGuessLetters[i].style.background = "lawngreen";
