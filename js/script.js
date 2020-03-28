@@ -397,6 +397,9 @@ function restartVid() {
 }
 
 function updateLeaderboard(userName, score) {
+    if (!userName) {
+        return;
+    }
     // generating a random id (as two userName can be same.)
     const autoId = rootRef.push().key;
     // add the information of users in database
