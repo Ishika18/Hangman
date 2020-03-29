@@ -265,6 +265,7 @@ function gameStop() {
     updateLeaderboard(userName, score);
 
     // show the user the leaderboard
+    generateLeaderBoard();
 }
 
 // start the game
@@ -420,13 +421,19 @@ function gotData(data) {
 
     let scores = data.val();
     let keys = Object.keys(scores);
-    console.log(scores)
-    console.log(keys);
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 1; i < 6; i++) {
         key = keys[i]
         let userName = scores[key].userName;
         let score = scores[key].score;
         console.log(userName, score);
+        let tableCell = document.createElement("td");
+        tableCell.innerText = userName;
+        console.log(tableCell);
+        document.getElementById("row" + i).appendChild(tableCell);
+        let tableCell2 = document.createElement("td");
+        tableCell2.innerText = score;
+        console.log(score);
+        document.getElementById("row" + i).appendChild(tableCell2);
     }
 }
 
@@ -435,4 +442,8 @@ function errData(err) {
     console.log(err);
 }
 
+function generateLeaderBoard() {
+    console.log("works.")
+    $('#leaderBoard').modal('show');
+}
 showLeaderboard();
