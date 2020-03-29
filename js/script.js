@@ -265,6 +265,7 @@ function gameStop() {
     updateLeaderboard(userName, score);
 
     // show the user the leaderboard
+    showLeaderboard();
     generateLeaderBoard();
 }
 
@@ -421,20 +422,34 @@ function gotData(data) {
 
     let scores = data.val();
     let keys = Object.keys(scores);
+    clearTable();
     for (let i = 1; i < 6; i++) {
         key = keys[i]
         let userName = scores[key].userName;
         let score = scores[key].score;
         console.log(userName, score);
+
         let tableCell = document.createElement("td");
         tableCell.innerText = userName;
+        tableCell.setAttribute('class', 'cell1');
         console.log(tableCell);
         document.getElementById("row" + i).appendChild(tableCell);
+
         let tableCell2 = document.createElement("td");
         tableCell2.innerText = score;
+        tableCell2.setAttribute('class', 'cell2');
         console.log(score);
         document.getElementById("row" + i).appendChild(tableCell2);
     }
+}
+
+function clearTable() {
+    let names = document.getElementsByClassName('cell1');
+    let scores = document.getElementsByClassName('cell2');
+    for (let i = 0; i < names.length; i++) {
+        names[i].remove();
+        scores[i].remove();
+    }   
 }
 
 function errData(err) {
@@ -446,4 +461,4 @@ function generateLeaderBoard() {
     console.log("works.")
     $('#leaderBoard').modal('show');
 }
-showLeaderboard();
+//showLeaderboard();
