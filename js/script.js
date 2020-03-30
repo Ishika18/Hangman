@@ -5,8 +5,8 @@ const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 // instance of firebase database
-const database = firebase.database();
-const rootRef = database.ref('leaderboard');
+const database = firebase.firestore();
+
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
@@ -265,7 +265,6 @@ function gameStop() {
     updateLeaderboard(userName, score);
 
     // show the user the leaderboard
-    showLeaderboard();
     generateLeaderBoard();
 }
 
@@ -402,54 +401,54 @@ function updateLeaderboard(userName, score) {
     if (!userName) {
         return;
     }
-    // generating a random id (as two userName can be same.)
-    const autoId = rootRef.push().key;
     // add the information of users in database
-    rootRef.child(autoId).set({
+    database.collection("scores").doc().set({
         userName: userName,
         score: score
+    })
+    .then(function() {
+        console.log("document successfully written");
+        updateScores();
+    })
+    .catch(function(error) {
+        console.error("Enter writing document: ", error);
     });
 }
 
-function showLeaderboard() {
-    console.log("showleaderboard works");
-    rootRef.on('value', gotData, errData);
-}
-
-// get the data from the firebase
-function gotData(data) {
-    console.log(data.val());
-
-    let scores = data.val();
-    let keys = Object.keys(scores);
+function updateScores() {
     clearTable();
-    for (let i = 1; i < 6; i++) {
-        key = keys[i]
-        let userName = scores[key].userName;
-        let score = scores[key].score;
-        console.log(userName, score);
+    let i = 1;
+    // get the top 5 scores from the sccoreboard
+    database.collection("scores").orderBy("score", "desc").limit(5).get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            let tableCell = document.createElement("td");
+            tableCell.innerText = doc.data().userName;
+            tableCell.setAttribute('class', 'cell1');
+            console.log(tableCell);
+            document.getElementById("row" + i).appendChild(tableCell);
 
-        let tableCell = document.createElement("td");
-        tableCell.innerText = userName;
-        tableCell.setAttribute('class', 'cell1');
-        console.log(tableCell);
-        document.getElementById("row" + i).appendChild(tableCell);
-
-        let tableCell2 = document.createElement("td");
-        tableCell2.innerText = score;
-        tableCell2.setAttribute('class', 'cell2');
-        console.log(score);
-        document.getElementById("row" + i).appendChild(tableCell2);
-    }
+            let tableCell2 = document.createElement("td");
+            tableCell2.innerText = doc.data().score;
+            tableCell2.setAttribute('class', 'cell2');
+            console.log(score);
+            document.getElementById("row" + i).appendChild(tableCell2);
+            i++;
+        })
+    })
 }
 
 function clearTable() {
+    console.log("cleartable");
     let names = document.getElementsByClassName('cell1');
     let scores = document.getElementsByClassName('cell2');
+    console.log("names: " + names);
+    console.log("scores: " + scores);
     for (let i = 0; i < names.length; i++) {
+        console.log(names[i]);
         names[i].remove();
+        console.log(scores[i])
         scores[i].remove();
-    }   
+    }
 }
 
 function errData(err) {
@@ -461,4 +460,3 @@ function generateLeaderBoard() {
     console.log("works.")
     $('#leaderBoard').modal('show');
 }
-//showLeaderboard();
