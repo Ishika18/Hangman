@@ -7,6 +7,10 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz";
 // instance of firebase database
 const database = firebase.database();
 const rootRef = database.ref('leaderboard');
+const limitNumber = 6;
+const rootRefSorted = database.ref('leaderboard').ref.orderByChild( "score").limitToLast(limitNumber);
+
+console.log(rootRefSorted);
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
@@ -413,7 +417,7 @@ function updateLeaderboard(userName, score) {
 
 function showLeaderboard() {
     console.log("showleaderboard works");
-    rootRef.on('value', gotData, errData);
+    rootRefSorted.on('value', gotData, errData);
 }
 
 // get the data from the firebase
@@ -429,6 +433,8 @@ function gotData(data) {
         let score = scores[key].score;
         console.log(userName, score);
 
+        //console.log(sortLeaderboard(data));
+
         let tableCell = document.createElement("td");
         tableCell.innerText = userName;
         tableCell.setAttribute('class', 'cell1');
@@ -443,13 +449,34 @@ function gotData(data) {
     }
 }
 
+function sortLeaderboard(data) {
+    const records = data.val();
+    function compare(a, b) {
+        const scoreA = a.score;
+        const scoreB = b.score;
+        let comparison = 0;
+        if (scoreA > scoreB) {
+            comparison = 1;
+        } else if (scoreA < scoreB) {
+            comparison = -1;
+        }
+        return comparison;
+    }
+    return records.sort(compare);
+}
+
 function clearTable() {
+    console.log("cleartable");
     let names = document.getElementsByClassName('cell1');
     let scores = document.getElementsByClassName('cell2');
+    console.log("names: " + names);
+    console.log("scores: " + scores);
     for (let i = 0; i < names.length; i++) {
+        console.log(names[i]);
         names[i].remove();
+        console.log(scores[i])
         scores[i].remove();
-    }   
+    }
 }
 
 function errData(err) {
@@ -461,4 +488,3 @@ function generateLeaderBoard() {
     console.log("works.")
     $('#leaderBoard').modal('show');
 }
-//showLeaderboard();
