@@ -5,12 +5,8 @@ const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 // instance of firebase database
-const database = firebase.database();
-const rootRef = database.ref('leaderboard');
-const limitNumber = 6;
-const rootRefSorted = database.ref('leaderboard').ref.orderByChild( "score").limitToLast(limitNumber);
+const database = firebase.firestore();
 
-console.log(rootRefSorted);
 let wordList = [];
 let guessWord;
 let guessWordDefinition;
@@ -269,7 +265,6 @@ function gameStop() {
     updateLeaderboard(userName, score);
 
     // show the user the leaderboard
-    showLeaderboard();
     generateLeaderBoard();
 }
 
@@ -406,63 +401,40 @@ function updateLeaderboard(userName, score) {
     if (!userName) {
         return;
     }
-    // generating a random id (as two userName can be same.)
-    const autoId = rootRef.push().key;
     // add the information of users in database
-    rootRef.child(autoId).set({
+    database.collection("scores").doc().set({
         userName: userName,
         score: score
+    })
+    .then(function() {
+        console.log("document successfully written");
+        updateScores();
+    })
+    .catch(function(error) {
+        console.error("Enter writing document: ", error);
     });
 }
 
-function showLeaderboard() {
-    console.log("showleaderboard works");
-    rootRefSorted.on('value', gotData, errData);
-}
-
-// get the data from the firebase
-function gotData(data) {
-    console.log(data.val());
-
-    let scores = data.val();
-    let keys = Object.keys(scores);
+function updateScores() {
     clearTable();
-    for (let i = 1; i < 6; i++) {
-        key = keys[i]
-        let userName = scores[key].userName;
-        let score = scores[key].score;
-        console.log(userName, score);
+    let i = 1;
+    // get the top 5 scores from the sccoreboard
+    database.collection("scores").orderBy("score", "desc").limit(5).get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+            let tableCell = document.createElement("td");
+            tableCell.innerText = doc.data().userName;
+            tableCell.setAttribute('class', 'cell1');
+            console.log(tableCell);
+            document.getElementById("row" + i).appendChild(tableCell);
 
-        //console.log(sortLeaderboard(data));
-
-        let tableCell = document.createElement("td");
-        tableCell.innerText = userName;
-        tableCell.setAttribute('class', 'cell1');
-        console.log(tableCell);
-        document.getElementById("row" + i).appendChild(tableCell);
-
-        let tableCell2 = document.createElement("td");
-        tableCell2.innerText = score;
-        tableCell2.setAttribute('class', 'cell2');
-        console.log(score);
-        document.getElementById("row" + i).appendChild(tableCell2);
-    }
-}
-
-function sortLeaderboard(data) {
-    const records = data.val();
-    function compare(a, b) {
-        const scoreA = a.score;
-        const scoreB = b.score;
-        let comparison = 0;
-        if (scoreA > scoreB) {
-            comparison = 1;
-        } else if (scoreA < scoreB) {
-            comparison = -1;
-        }
-        return comparison;
-    }
-    return records.sort(compare);
+            let tableCell2 = document.createElement("td");
+            tableCell2.innerText = doc.data().score;
+            tableCell2.setAttribute('class', 'cell2');
+            console.log(score);
+            document.getElementById("row" + i).appendChild(tableCell2);
+            i++;
+        })
+    })
 }
 
 function clearTable() {
