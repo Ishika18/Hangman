@@ -1,15 +1,12 @@
 @font-face {
-    font-family: starJedi;
-    src: url('../font/Starjedi.ttf')
-}
-@font-face {
-    font-family: workPlease;
+    font-family: sfDistantG;
     font-weight: normal;
-    src: url('../font/SfDistantGalaxy-0l3d.ttf')
+    src: url('/font/SfDistantGalaxy-0l3d.ttf')
 }
 @font-face {
     font-family: serifGothic; 
-    src: url('../font/SerifGothicStd-bold.otf');
+    font-weight: normal;
+    src: url('/font/SerifGothicStd-Light.otf');
 }
 #container {
     display: grid;
@@ -36,7 +33,7 @@ button[id*="c-letter"]{
     background-color: #60301d;
     box-shadow: 1px 5px 30px #000000;
     color: yellow;
-    font-family: workPlease;
+    font-family: "sfDistantG";
     font-size: 2vw;
 }
 
@@ -58,12 +55,13 @@ button[class*="guessLetter"]{
     background-color: #c21703;
     box-shadow: 1px 5px 30px #000000;
     color: yellow;
-    font-family: starJedi;
+    font-family: "sfDistantG";
 }
 #scoreContainer{
     grid-area: scoreContainer;
     font-size: 2vh;
-    font-family: starJedi;
+    color: yellow;
+    font-family: "sfDistantG";
 }
 
 #optionsContainer {grid-area: optionsContainer;}
@@ -77,10 +75,8 @@ body {
     display: flex;
     padding: 5px;
     justify-content: center;
-    font-family: serifGothic;
-
-    color:yellow;
     font-size: 1vw;
+    font-family: sfDistantG;
 }
 
 .item {
@@ -120,6 +116,7 @@ body {
         height: 95vh;
         grid-template-rows: 0.1fr 10% 4fr 0.2fr 1fr;
         grid-gap: 0.5%;
+        color: yellow;
         grid-template-areas:
                 "scoreContainer"
                 "optionsContainer"
@@ -134,5 +131,9 @@ body {
     background-color: #c21703;
     box-shadow: 1px 5px 30px #000000;
     color: yellow;
-    font-family: starJedi;
+    font-family: "sfDistantG";
+}
+#guessDefinition {
+    color: yellow;
+    font-family: "serifGothic";
 }
