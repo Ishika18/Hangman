@@ -1,12 +1,12 @@
 @font-face {
     font-family: sfDistantG;
     font-weight: normal;
-    src: url('/font/SfDistantGalaxy-0l3d.ttf')
+    src: url('../font/SfDistantGalaxy-0l3d.ttf')
 }
 @font-face {
     font-family: serifGothic; 
     font-weight: normal;
-    src: url('/font/SerifGothicStd-Light.otf');
+    src: url('../font/SerifGothicStd-Light.otf');
 }
 #container {
     display: grid;
