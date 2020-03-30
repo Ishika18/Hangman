@@ -37,7 +37,7 @@ function getOwlAPIWord(word) {
             console.log(data["definitions"][0]["definition"]);
             if(checkForOldDefinition){
                 let guessDefinition = document.querySelector('#guessDefinition');
-                guessDefinition.innerText = guessWordDefinition;
+                guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
             }else{
                 generateGuessDefinition();
             }
@@ -111,7 +111,7 @@ function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
     let guessDefinition = document.createElement('p');
     guessDefinition.id = guessDefinitionId;
-    guessDefinition.innerText = guessWordDefinition;
+    guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
     guessDefinitionContainer.appendChild(guessDefinition);
     // guessLetterContainer.appendChild(guessDefinition);   create new container to hold definition
 }
