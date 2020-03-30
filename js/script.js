@@ -416,39 +416,16 @@ function updateLeaderboard(userName, score) {
 }
 
 function updateScores() {
-    clearTable();
     let i = 1;
     // get the top 5 scores from the sccoreboard
     database.collection("scores").orderBy("score", "desc").limit(5).get().then((snapshot) => {
         snapshot.forEach((doc) => {
-            let tableCell = document.createElement("td");
-            tableCell.innerText = doc.data().userName;
-            tableCell.setAttribute('class', 'cell1');
-            console.log(tableCell);
-            document.getElementById("row" + i).appendChild(tableCell);
+            document.getElementById("name" + i).innerText = doc.data().userName;
 
-            let tableCell2 = document.createElement("td");
-            tableCell2.innerText = doc.data().score;
-            tableCell2.setAttribute('class', 'cell2');
-            console.log(score);
-            document.getElementById("row" + i).appendChild(tableCell2);
+            document.getElementById("score" + i).innerText = doc.data().score;
             i++;
         })
     })
-}
-
-function clearTable() {
-    console.log("cleartable");
-    let names = document.getElementsByClassName('cell1');
-    let scores = document.getElementsByClassName('cell2');
-    console.log("names: " + names);
-    console.log("scores: " + scores);
-    for (let i = 0; i < names.length; i++) {
-        console.log(names[i]);
-        names[i].remove();
-        console.log(scores[i])
-        scores[i].remove();
-    }
 }
 
 function errData(err) {
