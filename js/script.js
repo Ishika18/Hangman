@@ -95,6 +95,7 @@ function generateGuessLetters(){
         let guessLetter = document.createElement('button');
         guessLetter.classList.add(guessLetterClass);
         guessLetter.classList.add("guessLetter");
+        guessLetter.classList.add("guessLetter");
         // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetterContainer.appendChild(guessLetter);
@@ -249,25 +250,20 @@ function scoreUpdate() {
     document.getElementById('scoreContainer').innerHTML = "Score: " + score;
 }
 
+// ends the game early, promps for username to update scoreboard with info, resets game
 function gameOver() {
-    console.log("You loose.");
-    // ask the player for their name for the leaderboard
-    gameStop();
-    // restart the game when a player looses, will be changed if the leaderboard is changed.
-    gameRestart();
-}
-
-function gameStop() {
     let userName = prompt("You score is: "+ score + " Write your name: ");
     updateLeaderboard(userName, score);
     // show the user the leaderboard
     generateLeaderBoard();
+    gameRestart();
 }
 
 // start the game
 function gameStart(){
     restartVid();
     generateResetButton();
+    generateStartStopButton();
     generateChoiceLetters();
     getGuessWord();
 }
@@ -284,27 +280,16 @@ function gameNewRound() {
         optionsContainer.removeChild(optionsContainer.lastChild);
     }
     lifeReset();
-    generateStartStopButton();
     gameStart();
 }
 
-// clears screen, calls new word, resets score, resets lives
+// same as gameNewRound be we reset the score as well
 function gameRestart() {
-    while (choiceLetterContainer.firstChild) {
-        choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
-    }
-    while (guessLetterContainer.firstChild) {
-        guessLetterContainer.removeChild(guessLetterContainer.lastChild);
-    }
-    while (optionsContainer.firstChild) {
-        optionsContainer.removeChild(optionsContainer.lastChild);
-    }
     scoreReset();
-    lifeReset();
-    generateStartStopButton();
-    gameStart();
+    gameNewRound();
 }
 
+// start / stop button to end game early
 function startStop(startStopBtn){
     return function() {
         if (gamePlaying === false) {
@@ -314,7 +299,7 @@ function startStop(startStopBtn){
         } else {
             gamePlaying = false;
             startStopBtn.innerText = 'Start';
-            gameStop();
+            gameOver();
         }
     }
 }
