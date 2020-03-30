@@ -57,10 +57,7 @@ fetch("src/wordlist.json")
 // main call
 function main(){
     generateStartStopButton();
-    // generateResetButton();
-    // gameStart();
     mediaVisible();
-    restartVid();
 }
 
 // generates choice letters
@@ -193,7 +190,7 @@ function choiceLetterClickSuccess(letter) {
     setTimeout(function () {
         letter.style.fontSize = '20px';
         letter.style.backgroundColor = "lawngreen"
-    }, 200);
+    }, 100);
 }
 
 // creates the game reset button
@@ -261,21 +258,21 @@ function gameOver() {
 }
 
 function gameStop() {
-    userName = prompt("You score is: "+ score + " Write your name: ");
+    let userName = prompt("You score is: "+ score + " Write your name: ");
     updateLeaderboard(userName, score);
-
     // show the user the leaderboard
     generateLeaderBoard();
 }
 
 // start the game
 function gameStart(){
+    restartVid();
     generateResetButton();
     generateChoiceLetters();
     getGuessWord();
 }
 
-// clears screen, calls new word, resets lives, maintains score, re
+// clears screen, calls new word, resets lives, maintains score, restarts video
 function gameNewRound() {
     while (choiceLetterContainer.firstChild) {
         choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
@@ -290,6 +287,7 @@ function gameNewRound() {
     generateStartStopButton();
     gameStart();
 }
+
 // clears screen, calls new word, resets score, resets lives
 function gameRestart() {
     while (choiceLetterContainer.firstChild) {
@@ -304,7 +302,6 @@ function gameRestart() {
     scoreReset();
     lifeReset();
     generateStartStopButton();
-    // generateResetButton();
     gameStart();
 }
 
@@ -312,22 +309,11 @@ function startStop(startStopBtn){
     return function() {
         if (gamePlaying === false) {
             gamePlaying = true;
-            startStopBtn.style.fontSize = '28px';
-            setTimeout(function () {
-                startStopBtn.style.fontSize = '20px';
-            }, 200);
             gameRestart();
-            console.log("this works")
             startStopBtn.innerText = 'Stop';
-            return;
-        }
-        if (gamePlaying === true) {
+        } else {
             gamePlaying = false;
             startStopBtn.innerText = 'Start';
-            startStopBtn.style.fontSize = '28px';
-            setTimeout(function () {
-                startStopBtn.style.fontSize = '20px';
-            }, 200);
             gameStop();
         }
     }
@@ -350,36 +336,40 @@ function generateMedia(){
     highGroundVideo = document.getElementById("media");
 }
 
-// // pauses video if you get the your current lives left
-// highGroundVideo.ontimeupdate = () => {
-//
-// };
-
 function mediaVisible() {
     highGroundVideo.style.visibility = "visible"
 }
 
+// media start an stop times
 function hangMediaPlay() {
+    const pauseOn7Lives = 2.0;
+    const pauseOn6Lives = 3.5;
+    const pauseOn5Lives = 6.0;
+    const pauseOn4Lives = 8.4;
+    const pauseOn3Lives = 11.0;
+    const pauseOn2Lives = 14.0;
+    const pauseOn1Lives = 20.0;
+
     if(lives === 7) {
-        videoPauseTime = 2.0;
+        videoPauseTime = pauseOn7Lives;
         playVid();
     } else if(lives === 6) {
-        videoPauseTime = 3.5;
+        videoPauseTime = pauseOn6Lives;
         playVid();
     } else if(lives === 5) {
-        videoPauseTime = 6.0;
+        videoPauseTime = pauseOn5Lives;
         playVid();
     } else if(lives === 4) {
-        videoPauseTime = 8.4;
+        videoPauseTime = pauseOn4Lives;
         playVid();
     } else if(lives === 3) {
-        videoPauseTime = 11.0;
+        videoPauseTime = pauseOn3Lives;
         playVid();
     } else if(lives === 2) {
-        videoPauseTime = 14.0;
+        videoPauseTime = pauseOn2Lives;
         playVid();
     } else if(lives === 1) {
-        videoPauseTime = 20.0;
+        videoPauseTime = pauseOn1Lives;
         playVid();
     }
 }
@@ -417,7 +407,7 @@ function updateLeaderboard(userName, score) {
 
 function updateScores() {
     let i = 1;
-    // get the top 5 scores from the sccoreboard
+    // get the top 5 scores from the scoreboard
     database.collection("scores").orderBy("score", "desc").limit(5).get().then((snapshot) => {
         snapshot.forEach((doc) => {
             document.getElementById("name" + i).innerText = doc.data().userName;
@@ -428,12 +418,6 @@ function updateScores() {
     })
 }
 
-function errData(err) {
-    console.log("Error");
-    console.log(err);
-}
-
 function generateLeaderBoard() {
-    console.log("works.")
     $('#leaderBoard').modal('show');
 }
