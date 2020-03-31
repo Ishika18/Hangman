@@ -37,7 +37,7 @@ function getOwlAPIWord(word) {
             console.log(data["definitions"][0]["definition"]);
             if(checkForOldDefinition){
                 let guessDefinition = document.querySelector('#guessDefinition');
-                guessDefinition.innerText = guessWordDefinition;
+                guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
             }else{
                 generateGuessDefinition();
             }
@@ -95,6 +95,7 @@ function generateGuessLetters(){
         let guessLetter = document.createElement('button');
         guessLetter.classList.add(guessLetterClass);
         guessLetter.classList.add("guessLetter");
+        guessLetter.classList.add("guessLetter");
         // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetterContainer.appendChild(guessLetter);
@@ -110,7 +111,7 @@ function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
     let guessDefinition = document.createElement('p');
     guessDefinition.id = guessDefinitionId;
-    guessDefinition.innerText = guessWordDefinition;
+    guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
     guessDefinitionContainer.appendChild(guessDefinition);
     // guessLetterContainer.appendChild(guessDefinition);   create new container to hold definition
 }
@@ -249,25 +250,20 @@ function scoreUpdate() {
     document.getElementById('scoreContainer').innerHTML = "Score: " + score;
 }
 
+// ends the game early, promps for username to update scoreboard with info, resets game
 function gameOver() {
-    console.log("You loose.");
-    // ask the player for their name for the leaderboard
-    gameStop();
-    // restart the game when a player looses, will be changed if the leaderboard is changed.
-    gameRestart();
-}
-
-function gameStop() {
     let userName = prompt("You score is: "+ score + " Write your name: ");
     updateLeaderboard(userName, score);
     // show the user the leaderboard
     generateLeaderBoard();
+    gameRestart();
 }
 
 // start the game
 function gameStart(){
     restartVid();
     generateResetButton();
+    generateStartStopButton();
     generateChoiceLetters();
     getGuessWord();
 }
@@ -284,27 +280,16 @@ function gameNewRound() {
         optionsContainer.removeChild(optionsContainer.lastChild);
     }
     lifeReset();
-    generateStartStopButton();
     gameStart();
 }
 
-// clears screen, calls new word, resets score, resets lives
+// same as gameNewRound be we reset the score as well
 function gameRestart() {
-    while (choiceLetterContainer.firstChild) {
-        choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
-    }
-    while (guessLetterContainer.firstChild) {
-        guessLetterContainer.removeChild(guessLetterContainer.lastChild);
-    }
-    while (optionsContainer.firstChild) {
-        optionsContainer.removeChild(optionsContainer.lastChild);
-    }
     scoreReset();
-    lifeReset();
-    generateStartStopButton();
-    gameStart();
+    gameNewRound();
 }
 
+// start / stop button to end game early
 function startStop(startStopBtn){
     return function() {
         if (gamePlaying === false) {
@@ -314,7 +299,7 @@ function startStop(startStopBtn){
         } else {
             gamePlaying = false;
             startStopBtn.innerText = 'Start';
-            gameStop();
+            gameOver();
         }
     }
 }
@@ -406,61 +391,16 @@ function updateLeaderboard(userName, score) {
 }
 
 function updateScores() {
-    clearTable();
     let i = 1;
     // get the top 5 scores from the scoreboard
     database.collection("scores").orderBy("score", "desc").limit(5).get().then((snapshot) => {
         snapshot.forEach((doc) => {
-            let tableCell = document.createElement("td");
-            tableCell.innerText = doc.data().userName;
-            tableCell.setAttribute('class', 'cell1');
-            console.log(tableCell);
-            document.getElementById("row" + i).appendChild(tableCell);
+            document.getElementById("name" + i).innerText = doc.data().userName;
 
-            let tableCell2 = document.createElement("td");
-            tableCell2.innerText = doc.data().score;
-            tableCell2.setAttribute('class', 'cell2');
-            console.log(score);
-            document.getElementById("row" + i).appendChild(tableCell2);
+            document.getElementById("score" + i).innerText = doc.data().score;
             i++;
         })
     })
-}
-
-function clearTable() {
-    console.log("cleartable");
-    let names = document.getElementsByClassName('cell1');
-    let scores = document.getElementsByClassName('cell2');
-    console.log("names: " + names);
-    console.log("scores: " + scores);
-    for (let i = 0; i < names.length; i++) {
-        console.log(names[i]);
-        names[i].remove();
-        console.log(scores[i]);
-        scores[i].remove();
-    }
-}
-
-function showLeaderboard() {
-    console.log("showleaderboard works");
-    rootRef.on('value', gotData, errData);
-}
-
-// get the data from the firebase
-function gotData(data) {
-    console.log(data.val());
-
-    let records = data.val();
-    for (let i = 0; i < records.length; i++) {
-        let userName = records[i].userName;
-        let score = records[i].score;
-        console.log(userName, score);
-    }
-}
-
-function errData(err) {
-    console.log("Error");
-    console.log(err);
 }
 
 function generateLeaderBoard() {

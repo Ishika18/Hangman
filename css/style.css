@@ -25,6 +25,7 @@
     justify-content: center;
     align-items: center;
 }
+
 button[id*="c-letter"]{
     width: 5vw;
     height: 7vh;
@@ -57,6 +58,7 @@ button[class*="guessLetter"]{
     color: yellow;
     font-family: "sfDistantG";
 }
+
 #scoreContainer{
     grid-area: scoreContainer;
     font-size: 2vh;
@@ -64,19 +66,49 @@ button[class*="guessLetter"]{
     font-family: "sfDistantG";
 }
 
-#optionsContainer {grid-area: optionsContainer;}
-#animationArea {grid-area: animationArea;}
-#guessLetterContainer {grid-area: guessLetterContainer;}
-#guessDefinition {grid-area: guessDefinition;}
+#optionsContainer {
+    grid-area: optionsContainer;
+
+}
+
+#animationArea {
+    grid-area: animationArea;
+}
+
+#guessLetterContainer {
+    grid-area: guessLetterContainer;
+    justify-content: center;
+}
+
+#guessDefinition {
+    grid-area: guessDefinition;
+    color: yellow;
+}
+
+#choiceLetterContainer {
+
+}
 
 body {
+    min-height: 568px;
+    min-width: 320px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 5%;
     background-image: url('../images/background.jpg');
     background-size: 100% 100%;
     display: flex;
-    padding: 5px;
+    padding: 10px;
     justify-content: center;
     font-size: 1vw;
     font-family: sfDistantG;
+}
+
+html {
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
 
 .item {
@@ -125,6 +157,7 @@ body {
                 "guessDefinition"
     }
 }
+
 #startStop {
     margin: 0.1%;
     border-radius: 10px;

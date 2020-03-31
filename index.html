@@ -29,13 +29,13 @@
     <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-    <div id="container">
+    <div class="" id="container">
         <div id="scoreContainer" class="item">Score: 0</div>
         <div id="optionsContainer" class="item"></div>
         <div id="animationArea" class="item"></div>
         <div id="guessLetterContainer" class="item"></div>
         <div id="guessDefinition" class="item"></div>
-        <div id="choiceLetterContainer"></div>
+        <div class="d-flex flex-wrap align-content-stretch" id="choiceLetterContainer"></div>
         <!-- Modal -->
         <div class="modal fade" id="leaderBoard" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -58,18 +58,28 @@
                   <tbody>
                     <tr id="row1">
                       <th scope="row">1</th>
+                      <td id="name1"></td>
+                      <td id="score1"></td>
                     </tr>
                     <tr id="row2">
                       <th scope="row">2</th>
+                      <td id="name2"></td>
+                      <td id="score2"></td>
                     </tr>
                     <tr id="row3">
                       <th scope="row">3</th>
+                      <td id="name3"></td>
+                      <td id="score3"></td>
                     </tr>
                     <tr id="row4">
                       <th scope="row">4</th>
+                      <td id="name4"></td>
+                      <td id="score4"></td>
                     </tr>
                     <tr id="row5">
                       <th scope="row">5</th>
+                      <td id="name5"></td>
+                      <td id="score5"></td>
                     </tr>
                   </tbody>
                 </table>
