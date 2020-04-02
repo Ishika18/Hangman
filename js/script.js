@@ -4,6 +4,8 @@ const guessLetterContainer = document.getElementById("guessLetterContainer");
 const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+const buttonTimer = 100;
+const newRoundTime = 2000;
 // instance of firebase database
 const database = firebase.firestore();
 
@@ -157,7 +159,7 @@ function checkIfWordIsGuessed() {
     // if word has been guessed correctly
     console.log("Word has been guessed!");
     wordIsGuessedFlair();
-    setTimeout(gameNewRound, 2000)
+    setTimeout(gameNewRound, newRoundTime);
 }
 
 // flair for when player guesses the word correctly
@@ -176,7 +178,7 @@ function choiceLetterClickFail(letter) {
     setTimeout(function () {
         letter.classList.remove("letter-on-click");
         letter.classList.add("letter-fail");
-    }, 100);
+    }, buttonTimer);
 }
 
 // changes colour of the choice letters when clicked, on success green
@@ -185,7 +187,7 @@ function choiceLetterClickSuccess(letter) {
     setTimeout(function () {
         letter.classList.remove("letter-on-click");
         letter.classList.add("letter-success");
-    }, 100);
+    }, buttonTimer);
 }
 
 // creates the game reset button
