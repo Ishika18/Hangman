@@ -14,12 +14,12 @@ let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
-let highgroundvideo;
 let gamePlaying = false;
 let gameStartingFirstTime = true;
 let highGroundVideo;
 let videoPauseTime;
 let clapAudio = new Audio('src/claps3.mp3');
+
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -39,7 +39,7 @@ function getOwlAPIWord(word) {
             console.log(data["definitions"][0]["definition"]);
             if(checkForOldDefinition){
                 let guessDefinition = document.querySelector('#guessDefinition');
-                guessDefinition.innerText = guessWordDefinition;
+                guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
             }else{
                 generateGuessDefinition();
             }
@@ -103,6 +103,7 @@ function generateGuessLetters(){
     }
 }
 
+// checks for older definition of word
 function checkForOldDefinition(){
     return document.body.contains(document.querySelector('#guessDefinitionId'));
 }
@@ -112,7 +113,7 @@ function generateGuessDefinition() {
     let guessDefinitionId = "guessDefinitionId";
     let guessDefinition = document.createElement('p');
     guessDefinition.id = guessDefinitionId;
-    guessDefinition.innerText = guessWordDefinition;
+    guessDefinition.innerText = guessWordDefinition[0].toUpperCase() + guessWordDefinition.slice(1);
     guessDefinitionContainer.appendChild(guessDefinition);
     // guessLetterContainer.appendChild(guessDefinition);   create new container to hold definition
 }
@@ -167,31 +168,25 @@ function wordIsGuessedFlair() {
     clapAudio.play();
     let allGuessLetters = document.getElementsByClassName("guessLetter");
     for (let i = 0; i < allGuessLetters.length; i++) {
-        allGuessLetters[i].style.background = "lawngreen";
-        allGuessLetters[i].style.fontWeight = "bolder";
-        allGuessLetters[i].style.fontSize = "2vh";
-        allGuessLetters[i].style.color = 'black';
+        allGuessLetters[i].classList.add("all-guess-letters");
     }
 }
 
 // changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
-    letter.style.color = 'black';
-    letter.style.fontSize = '28px';
+    letter.classList.add("letter-on-click");
     setTimeout(function () {
-        letter.style.fontSize = '20px';
-        letter.style.color = "white";
-        letter.style.backgroundColor = "red"
+        letter.classList.remove("letter-on-click");
+        letter.classList.add("letter-fail");
     }, buttonTimer);
 }
 
 // changes colour of the choice letters when clicked, on success green
 function choiceLetterClickSuccess(letter) {
-    letter.style.color = 'black';
-    letter.style.fontSize = '28px';
+    letter.classList.add("letter-on-click");
     setTimeout(function () {
-        letter.style.fontSize = '20px';
-        letter.style.backgroundColor = "lawngreen"
+        letter.classList.remove("letter-on-click");
+        letter.classList.add("letter-success");
     }, buttonTimer);
 }
 
@@ -219,6 +214,7 @@ function generateStartStopButton() {
     optionsContainer.appendChild(startStopBtn);
 }
 
+// decrement player life
 function lifeDecrement() {
     if (lives === 1) {
         gameOver();
@@ -228,48 +224,48 @@ function lifeDecrement() {
     }
 }
 
+//reset lives
 function lifeReset() {
     lives = 7;
 }
 
+// decrement score
 function scoreDecrement(){
     score -= 1;
     scoreUpdate();
 }
 
+// increment score
 function scoreIncrement() {
     score += 1;
     scoreUpdate();
 }
 
+// reset score
 function scoreReset() {
     score = 0;
     scoreUpdate()
 }
 
+// update score
 function scoreUpdate() {
     document.getElementById('scoreContainer').innerHTML = "Score: " + score;
 }
 
+// ends the game early, promps for username to update scoreboard with info, resets game
 function gameOver() {
-    console.log("You loose.");
-    // ask the player for their name for the leaderboard
-    gameStop();
-    // restart the game when a player looses, will be changed if the leaderboard is changed.
-    gameRestart();
-}
-
-function gameStop() {
     let userName = prompt("You score is: "+ score + " Write your name: ");
     updateLeaderboard(userName, score);
     // show the user the leaderboard
     generateLeaderBoard();
+    gameRestart();
 }
 
 // start the game
 function gameStart(){
     restartVid();
     generateResetButton();
+    generateStartStopButton();
     generateChoiceLetters();
     getGuessWord();
 }
@@ -286,27 +282,16 @@ function gameNewRound() {
         optionsContainer.removeChild(optionsContainer.lastChild);
     }
     lifeReset();
-    generateStartStopButton();
     gameStart();
 }
 
-// clears screen, calls new word, resets score, resets lives
+// same as gameNewRound be we reset the score as well
 function gameRestart() {
-    while (choiceLetterContainer.firstChild) {
-        choiceLetterContainer.removeChild(choiceLetterContainer.lastChild);
-    }
-    while (guessLetterContainer.firstChild) {
-        guessLetterContainer.removeChild(guessLetterContainer.lastChild);
-    }
-    while (optionsContainer.firstChild) {
-        optionsContainer.removeChild(optionsContainer.lastChild);
-    }
     scoreReset();
-    lifeReset();
-    generateStartStopButton();
-    gameStart();
+    gameNewRound();
 }
 
+// start / stop button to end game early
 function startStop(startStopBtn){
     return function() {
         if (gamePlaying === false) {
@@ -316,11 +301,12 @@ function startStop(startStopBtn){
         } else {
             gamePlaying = false;
             startStopBtn.innerText = 'Start';
-            gameStop();
+            gameOver();
         }
     }
 }
 
+// create the video for hangman, high ground
 function generateMedia(){
     let mediaId = 'media';
     let media = document.createElement('video');
@@ -338,11 +324,12 @@ function generateMedia(){
     highGroundVideo = document.getElementById("media");
 }
 
+// default of video is hidden so that it may load, this sets to to visible on game start
 function mediaVisible() {
     highGroundVideo.style.visibility = "visible"
 }
 
-// media start an stop times
+// media start and stop times
 function hangMediaPlay() {
     const pauseOn7Lives = 2.0;
     const pauseOn6Lives = 3.5;
@@ -376,19 +363,23 @@ function hangMediaPlay() {
     }
 }
 
+// play video
 function playVid() {
     highGroundVideo.play();
 }
 
+// pause video
 function pauseVid() {
     highGroundVideo.pause();
 }
 
+// restart video
 function restartVid() {
     highGroundVideo.currentTime = 0;
     pauseVid();
 }
 
+// update the leaderboard with username and score
 function updateLeaderboard(userName, score) {
     if (!userName) {
         return;
@@ -407,6 +398,7 @@ function updateLeaderboard(userName, score) {
     });
 }
 
+// updates the scores of th leaderboard, write to table
 function updateScores() {
     let i = 1;
     // get the top 5 scores from the scoreboard
@@ -420,6 +412,47 @@ function updateScores() {
     })
 }
 
+
+// clears table
+function clearTable() {
+    console.log("cleartable");
+    let names = document.getElementsByClassName('cell1');
+    let scores = document.getElementsByClassName('cell2');
+    console.log("names: " + names);
+    console.log("scores: " + scores);
+    for (let i = 0; i < names.length; i++) {
+        console.log(names[i]);
+        names[i].remove();
+        console.log(scores[i]);
+        scores[i].remove();
+    }
+}
+
+// show leaderboard, for testing purposes
+function showLeaderboard() {
+    console.log("showleaderboard works");
+    rootRef.on('value', gotData, errData);
+}
+
+// get the data from the firebase
+function gotData(data) {
+    console.log(data.val());
+
+    let records = data.val();
+    for (let i = 0; i < records.length; i++) {
+        let userName = records[i].userName;
+        let score = records[i].score;
+        console.log(userName, score);
+    }
+}
+
+// error function on bad firestore call
+function errData(err) {
+    console.log("Error");
+    console.log(err);
+}
+
+// jquery for the leaderboard modal popup
 function generateLeaderBoard() {
     $('#leaderBoard').modal('show');
 }
