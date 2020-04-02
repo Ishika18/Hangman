@@ -12,12 +12,12 @@ let guessWord;
 let guessWordDefinition;
 let score = 0;
 let lives = 7;
-let highgroundvideo;
 let gamePlaying = false;
 let gameStartingFirstTime = true;
 let highGroundVideo;
 let videoPauseTime;
 let clapAudio = new Audio('src/claps3.mp3');
+
 
 // Oh?! What's this!? Blake got a god damn API?? Booyah!
 // curl --header "Authorization: Token d58d5b9e279673445fd27ae980b3a29950a230c9" https://owlbot.info/api/v4/dictionary/owl -s | json_pp
@@ -95,13 +95,13 @@ function generateGuessLetters(){
         let guessLetter = document.createElement('button');
         guessLetter.classList.add(guessLetterClass);
         guessLetter.classList.add("guessLetter");
-        guessLetter.classList.add("guessLetter");
         // guessLetter.id = guessLetterId;
         guessLetter.innerText = "_";
         guessLetterContainer.appendChild(guessLetter);
     }
 }
 
+// checks for older definition of word
 function checkForOldDefinition(){
     return document.body.contains(document.querySelector('#guessDefinitionId'));
 }
@@ -166,31 +166,25 @@ function wordIsGuessedFlair() {
     clapAudio.play();
     let allGuessLetters = document.getElementsByClassName("guessLetter");
     for (let i = 0; i < allGuessLetters.length; i++) {
-        allGuessLetters[i].style.background = "lawngreen";
-        allGuessLetters[i].style.fontWeight = "bolder";
-        allGuessLetters[i].style.fontSize = "2vh";
-        allGuessLetters[i].style.color = 'black';
+        allGuessLetters[i].classList.add("all-guess-letters");
     }
 }
 
 // changes colour of the choice letters when clicked, on fail red
 function choiceLetterClickFail(letter) {
-    letter.style.color = 'black';
-    letter.style.fontSize = '28px';
+    letter.classList.add("letter-on-click");
     setTimeout(function () {
-        letter.style.fontSize = '20px';
-        letter.style.color = "white";
-        letter.style.backgroundColor = "red"
+        letter.classList.remove("letter-on-click");
+        letter.classList.add("letter-fail");
     }, 100);
 }
 
 // changes colour of the choice letters when clicked, on success green
 function choiceLetterClickSuccess(letter) {
-    letter.style.color = 'black';
-    letter.style.fontSize = '28px';
+    letter.classList.add("letter-on-click");
     setTimeout(function () {
-        letter.style.fontSize = '20px';
-        letter.style.backgroundColor = "lawngreen"
+        letter.classList.remove("letter-on-click");
+        letter.classList.add("letter-success");
     }, 100);
 }
 
@@ -218,6 +212,7 @@ function generateStartStopButton() {
     optionsContainer.appendChild(startStopBtn);
 }
 
+// decrement player life
 function lifeDecrement() {
     if (lives === 1) {
         gameOver();
@@ -227,25 +222,30 @@ function lifeDecrement() {
     }
 }
 
+//reset lives
 function lifeReset() {
     lives = 7;
 }
 
+// decrement score
 function scoreDecrement(){
     score -= 1;
     scoreUpdate();
 }
 
+// increment score
 function scoreIncrement() {
     score += 1;
     scoreUpdate();
 }
 
+// reset score
 function scoreReset() {
     score = 0;
     scoreUpdate()
 }
 
+// update score
 function scoreUpdate() {
     document.getElementById('scoreContainer').innerHTML = "Score: " + score;
 }
@@ -304,6 +304,7 @@ function startStop(startStopBtn){
     }
 }
 
+// create the video for hangman, high ground
 function generateMedia(){
     let mediaId = 'media';
     let media = document.createElement('video');
@@ -321,11 +322,12 @@ function generateMedia(){
     highGroundVideo = document.getElementById("media");
 }
 
+// default of video is hidden so that it may load, this sets to to visible on game start
 function mediaVisible() {
     highGroundVideo.style.visibility = "visible"
 }
 
-// media start an stop times
+// media start and stop times
 function hangMediaPlay() {
     const pauseOn7Lives = 2.0;
     const pauseOn6Lives = 3.5;
@@ -359,19 +361,23 @@ function hangMediaPlay() {
     }
 }
 
+// play video
 function playVid() {
     highGroundVideo.play();
 }
 
+// pause video
 function pauseVid() {
     highGroundVideo.pause();
 }
 
+// restart video
 function restartVid() {
     highGroundVideo.currentTime = 0;
     pauseVid();
 }
 
+// update the leaderboard with username and score
 function updateLeaderboard(userName, score) {
     if (!userName) {
         return;
@@ -390,6 +396,7 @@ function updateLeaderboard(userName, score) {
     });
 }
 
+// updates the scores of th leaderboard, write to table
 function updateScores() {
     clearTable();
     let i = 1;
@@ -412,6 +419,7 @@ function updateScores() {
     })
 }
 
+// clears table
 function clearTable() {
     console.log("cleartable");
     let names = document.getElementsByClassName('cell1');
@@ -426,6 +434,7 @@ function clearTable() {
     }
 }
 
+// show leaderboard, for testing purposes
 function showLeaderboard() {
     console.log("showleaderboard works");
     rootRef.on('value', gotData, errData);
@@ -443,11 +452,13 @@ function gotData(data) {
     }
 }
 
+// error function on bad firestore call
 function errData(err) {
     console.log("Error");
     console.log(err);
 }
 
+// jquery for the leaderboard modal popup
 function generateLeaderBoard() {
     $('#leaderBoard').modal('show');
 }

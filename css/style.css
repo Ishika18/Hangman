@@ -65,6 +65,7 @@ button[class*="guessLetter"]{
 #scoreContainer{
     grid-area: scoreContainer;
     font-size: 2vh;
+    color: yellow;
     font-family: starJedi;
 }
 
@@ -167,4 +168,27 @@ html {
     box-shadow: 1px 5px 30px #000000;
     color: yellow;
     font-family: starJedi;
+}
+
+/*.all-class-letters {*/
+/*    background-color: lawngreen;*/
+/*    font-weight: bolder;*/
+/*    font-size: 2vh;*/
+/*    color: black;*/
+/*}*/
+
+.letter-on-click {
+    font-size: 28px !important;
+}
+
+.letter-success {
+    font-size: 20px !important;
+    color: black !important;
+    background-color: lawngreen !important;
+}
+
+.letter-fail {
+    font-size: 20px !important;
+    color: white !important;
+    background-color: red !important;
 }
