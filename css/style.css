@@ -64,6 +64,7 @@ button[class*="guessLetter"]{
     font-size: 2vh;
     color: yellow;
     font-family: "sfDistantG";
+
 }
 
 #optionsContainer {
@@ -166,7 +167,23 @@ html {
     color: yellow;
     font-family: "sfDistantG";
 }
+
 #guessDefinition {
     color: yellow;
     font-family: "serifGothic";
 }
+.letter-on-click {
+    font-size: 28px !important;
+}
+
+.letter-success {
+    font-size: 20px !important;
+    color: black !important;
+    background-color: lawngreen !important;
+}
+
+.letter-fail {
+    font-size: 20px !important;
+    color: white !important;
+    background-color: red !important;
+  }
