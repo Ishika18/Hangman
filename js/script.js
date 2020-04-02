@@ -4,6 +4,7 @@ const guessLetterContainer = document.getElementById("guessLetterContainer");
 const animationArea = document.getElementById("animationArea");
 const guessDefinitionContainer = document.getElementById("guessDefinition");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+const buttonTimer = 100;
 // instance of firebase database
 const database = firebase.firestore();
 
@@ -180,7 +181,7 @@ function choiceLetterClickFail(letter) {
         letter.style.fontSize = '20px';
         letter.style.color = "white";
         letter.style.backgroundColor = "red"
-    }, 100);
+    }, buttonTimer);
 }
 
 // changes colour of the choice letters when clicked, on success green
@@ -190,7 +191,7 @@ function choiceLetterClickSuccess(letter) {
     setTimeout(function () {
         letter.style.fontSize = '20px';
         letter.style.backgroundColor = "lawngreen"
-    }, 100);
+    }, buttonTimer);
 }
 
 // creates the game reset button
