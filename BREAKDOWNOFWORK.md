@@ -11,12 +11,18 @@
 
 ## Team Member: Trevor 
 ### Tasks Worked On:
-#### Task Title
-- What you did.
-- What you did.
-#### Task Title
-- What you did.
-- What you did.
+#### Created the project's base CSS Grid layout
+- learned CSS Grid and implemented it.
+#### Changed styles of CSS Grid implementation (changes not shown in commits)
+- changed from using `grid-row`/`grid-column` style to using only `grid-template-areas`
+#### Minor changes to javacsript files
+- removed repetitive CSS-modifying javascript and implemented it in `style.css`
+#### Media Queries (one)
+- learned about media queries and implemented one query
+#### CSS resizing for mobile (during beginning/middle stages of project)
+- fiddled for a long time with different sizes and length units in order for application to look okay in a mobile setting
+#### Very small changes to the HTML
+- added an `animationArea` div to Blake's original div `container`
 
 ## Team Member: Eric 
 ### Tasks Worked On:
