@@ -20,12 +20,17 @@
 
 ## Team Member: Eric 
 ### Tasks Worked On:
-#### Task Title
-- What you did.
-- What you did.
-#### Task Title
-- What you did.
-- What you did.
+#### Changed website to feel more star warzy after the video concept was implemented.
+- Added two custom fonts, one for the keys, the other for the score and buttons
+- Changed the font to be yellow.
+- Changed the background from plain color, to an image of space. 
+#### Added favicon
+- Created a hangman logo by editing an existing image.
+- Implemented the icon next to brower tabs through a favicon.
+#### Attempts at Implementing the video portion of hangman (not used)
+- Tried to use giphy api, worked but had no audio (not used)
+- Tried to use gfycat api, didnt work(not used)
+- Tried to use use the website url, was blocked by cors policy, caused other issues whebn cors policy was fixed. (not used)
 
 ## Team Member: Blake Michalzik
 ### Tasks Worked On:
