@@ -2,12 +2,41 @@
 
 ## Team Member: Shagun
 ### Tasks Worked On:
-#### Task Title
-- What you did.
-- What you did.
-#### Task Title
-- What you did.
-- What you did.
+#### Set up the firebase firestore
+- Reasearched about firebase realtime database and firebase.
+- Found methods to sort the scores.
+- Found methods to limit the scores to top five.
+- The methods did not work for realtime database, so switched to firestore.
+#### Set up the bootstrap modal for leader board
+- Reasearched about bootstrap properties.
+- Learnt bootstrap and used its modal property to show leaderboard.
+#### Wrote choiceLetterClick() function.
+- shows the correct letters clicked, if there is any
+- if no letter is present decrease the score, decrease the life and play the video.
+- if letters are present, increase the score according to number of letters present.
+- disable the button, once clicked.
+#### Wrote generateStartStopButton() function
+- Create a start button when the game starts.
+- Change the innerText of button to Stop or Start according to the game condition.
+- Stop or start the game when clicked.
+#### Wrote lifeDeccrement() function
+- Decrements the life of the player.
+- If lives become zero, calls gameOver() function.
+#### Wrote gameOver() function 
+- Prompts the user for user name
+- Updates the leaderboard by calling updateLeaderboard()
+- Shows the leaderboard by calling generateLeaderBoard()
+- Restarts the game by calling gameRestart()
+#### Wrote startStop() function
+- Stops the game if the game is being played.
+- Starts the game if the game is not being played.
+- A boolean value is set which keeps on changing according to the situation.
+#### Wrote updateScores() function
+- Update the score in the firebase firestor.
+- Get the top five scores and username in the database.
+- Show the scores in the leader board by changing innerText of table elements.
+#### Wrote generateLeaderboard() function
+- Shows the leader board modal to the user.
 
 ## Team Member: Trevor 
 ### Tasks Worked On:
